@@ -1,15 +1,15 @@
 const express = require("express");
 const ErrorHandler = require("./utils/ErrorHandler");
-// const fileUpload = require("express-fileupload");
 const app = express();
 const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
+const cors = require("cors");
 
 app.use(express.json());
 app.use(cookieParser());
-app.use("/", express.static("uploads"))
+app.use(cors());
+app.use("/", express.static("uploads"));
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(fileUpload({ useTempFiles: true }));
 
 // Config
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -21,8 +21,8 @@ if (process.env.NODE_ENV !== "PRODUCTION") {
 //import routes
 const user = require("./controller/user");
 
-app.use("api/v2/user", user);
-
+// Mount user routes
+app.use("/api/v2/user", user); // Added a forward slash (/) before "api/v2/user"
 
 // Error handling middleware
 app.use(ErrorHandler);
