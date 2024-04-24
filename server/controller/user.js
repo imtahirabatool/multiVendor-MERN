@@ -7,6 +7,11 @@ const router = express.Router();
 const { upload } = require("../multer");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
+  // Set CORS headers to allow requests from all origins
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
   const { name, email, password } = req.body;
   const userEmail = await User.findOne({ email });
   if (userEmail) {
