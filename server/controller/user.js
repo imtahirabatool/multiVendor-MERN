@@ -7,38 +7,27 @@ const router = express.Router();
 const { upload } = require("../multer");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
-  // Set CORS headers to allow requests from all origins
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
   const { name, email, password } = req.body;
   const userEmail = await User.findOne({ email });
   if (userEmail) {
     return next(new ErrorHandler("User already Exists.", 400));
   }
-
-  // Construct file URL with the uploads folder path
   const fileURL = path.join(__dirname, "..", "uploads", req.file.filename);
 
-  // Move the uploaded file to the uploads folder
   try {
     await fs.rename(req.file.path, fileURL);
   } catch (error) {
+    console.error("...", error);
     return next(new ErrorHandler("Error saving file.", 500));
   }
-
   const user = {
     name: name,
     email: email,
     password: password,
-    avatar: fileURL, // Save the file URL in the user object
+    avatar: fileURL, 
   };
 
   console.log(user);
-
-  // Here you would typically save the user object to the database
-
   res.status(200).json({ message: "User created successfully", user });
 });
 
