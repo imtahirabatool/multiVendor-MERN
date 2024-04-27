@@ -5,6 +5,8 @@ const User = require("../model/user");
 const ErrorHandler = require("../utils/ErrorHandler");
 const router = express.Router();
 const { upload } = require("../multer");
+const jwt = require("jsonwebtoken");
+const user = require("../model/user");
 
 // Create User Router
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
@@ -13,36 +15,53 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
     const userEmail = await User.findOne({ email });
     if (userEmail) {
-      const filename=req.file.filename;
-      const filePath=`uploads/${filename}`;
-      fs.unlink(filePath, (err)=>{
-        if(err){
+      const filename = req.file.filename;
+      const filePath = `uploads/${filename}`;
+      fs.unlink(filePath, (err) => {
+        if (err) {
           console.log(err);
-          res.status(500).json({message:"Error deleting file"})
-        }else{
-          res.json({message:"File deleted successfully!"})
+          res.status(500).json({ message: "Error deleting file" });
+        } else {
+          res.json({ message: "File deleted successfully!" });
         }
-      })
-      return next (new ErrorHandler("User already exists.", 400));
+      });
+      return next(new ErrorHandler("User already exists.", 400));
     }
 
-    const fileURL = path.join(__dirname, "..", "uploads/", req.file.filename);
+    const filename = req.file.filename;
+    const fileUrl = path.join(filename);
 
-    const user = new User({
+    const user = {
       name: name,
       email: email,
       password: password,
-      avatar: fileURL,
-    });
+      avatar: fileUrl,
+    };
 
-    // console.log(user);
-    await user.save();
+    const activationToken = createActivationToken(user);
 
-    res.status(200).json({ message: "User created successfully", user });
+    const activationUrl = `http://localhost:3000/activation/${activationToken}`;
+
+    try {
+      await SendmailTransport({
+        email:user.email,
+        subject:"Activate your account.",
+        message:`Hello ${user.name}, please click on the link to activate you account: ${activationUrl}`
+      })
+
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   } catch (error) {
-    console.error("Error:", error.message);
-    next(new ErrorHandler("Error saving file.", 500));
+    return next(new ErrorHandler(error.message, 400));
   }
 });
+
+//create activation token
+const createActivationToken = (user) => {
+  return jwt.sign(user, process.env.ACTIVATION_SECRET, {
+    expiresIn: "5m",
+  });
+};
 
 module.exports = router;
