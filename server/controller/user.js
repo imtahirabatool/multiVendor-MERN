@@ -13,7 +13,17 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
   try {
     const userEmail = await User.findOne({ email });
     if (userEmail) {
-      throw new ErrorHandler("User already exists.", 400);
+      const filename=req.file.filename;
+      const filePath=`uploads/${filename}`;
+      fs.unlink(filePath, (err)=>{
+        if(err){
+          console.log(err);
+          res.status(500).json({message:"Error deleting file"})
+        }else{
+          res.json({message:"File deleted successfully!"})
+        }
+      })
+      return next (new ErrorHandler("User already exists.", 400));
     }
 
     const fileURL = path.join(__dirname, "..", "uploads/", req.file.filename);
@@ -25,7 +35,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
       avatar: fileURL,
     });
 
-    console.log(user);
+    // console.log(user);
     await user.save();
 
     res.status(200).json({ message: "User created successfully", user });
