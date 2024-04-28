@@ -6,7 +6,7 @@ const ErrorHandler = require("../utils/ErrorHandler");
 const router = express.Router();
 const { upload } = require("../multer");
 const jwt = require("jsonwebtoken");
-const sendMail = require("../utils/sendMail"); // Import sendMail function
+const sendMail = require("../utils/sendMail"); 
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -16,7 +16,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     if (userEmail) {
       const filename = req.file.filename;
       const filePath = `uploads/${filename}`;
-      await fs.unlink(filePath); // Remove the uploaded file
+      await fs.unlink(filePath); 
       return next(new ErrorHandler("User already exists.", 400));
     }
 
