@@ -29,7 +29,7 @@ function SignUp() {
   
     axios.post(`${server}/user/create-user`, newForm, config)
       .then((res) => {
-        console.log(res);
+        alert(res.message);
       })
       .catch((err) => {
         console.log(err);
