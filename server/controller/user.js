@@ -34,20 +34,19 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
 
     // Save user to database
     // await user.save();
-    
+
     // Create activation token
-    const activationToken = createActivationToken({email});
+    const activationToken = createActivationToken({ email });
     console.log("first activation token" + activationToken);
 
     // Create activation URL
     const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
-
     try {
       await sendMail({
         email: email,
         subject: "Activate Your account",
-        message:` Hello ${name},\n\t Please click on the link below to activate your account:\n\n${activationUrl}`,
+        message: ` Hello ${name},\n\t Please click on the link below to activate your account:\n\n${activationUrl}`,
       });
       res.status(201).json({
         success: true,
@@ -83,5 +82,27 @@ const createActivationToken = (email) => {
   });
 };
 
+// activate user
+router.post(
+  "/activation",
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const { activation_token } = req.body;
+      const newUser = verify(activation_token.process.env.ACTIVATION_SECRET);
+
+      if (!newUser) {
+        return next(new ErrorHandler("Invalid Token", 400));
+      }
+      const { name, email, password, avatar } = newUser;
+      User.create({
+        name,
+        email,
+        password,
+        avatar,
+      });
+      sendToken(newUser, 201, res);
+    } catch (error) {}
+  })
+);
 
 module.exports = router;
