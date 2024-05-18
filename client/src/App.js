@@ -1,7 +1,7 @@
 import React from 'react'
 import "./App.css"
 import {BrowserRouter, Routes, Route} from 'react-router-dom'
-import {LoginPage, SignUpPage} from './Routes.js'
+import {LoginPage, SignUpPage, ActivationPage} from './Routes.js'
 
 export default function App() {
   return (
@@ -9,6 +9,7 @@ export default function App() {
     <Routes>
       <Route path='/login' element={<LoginPage/>}/>
       <Route path='/sign-up' element={<SignUpPage/>}/>
+      <Route path='/activation/:activation_token' element={<ActivationPage/>}/>
       </Routes></BrowserRouter>
   )
 }

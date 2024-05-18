@@ -5,12 +5,14 @@ import { Link } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { server } from "../../server";
+
 function SignUp() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
+  const [error, setError] = useState(null);
 
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
@@ -18,30 +20,32 @@ function SignUp() {
   };
 
   const handleSubmit = (e) => {
-    e.preventDefault(); // Corrected typo
+    e.preventDefault();
+
+    const formData = new FormData();
+    formData.append("file", avatar);
+    formData.append("name", name);
+    formData.append("email", email);
+    formData.append("password", password);
+
     const config = { headers: { "Content-Type": "multipart/form-data" } };
-    const newForm = new FormData();
-  
-    newForm.append("file", avatar);
-    newForm.append("name", name);
-    newForm.append("email", email);
-    newForm.append("password", password);
-  
-    axios.post(`${server}/user/create-user`, newForm, config)
+
+    axios
+      .post(`${server}/user/create-user`, formData, config)
       .then((res) => {
-        alert(res.message);
+        alert(res.data.message); // Corrected to access res.data.message
       })
       .catch((err) => {
-        console.log(err);
+        console.error("Error submitting form:", err);
+        setError("Failed to create user. Please try again later."); // Example error handling
       });
   };
-    
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-          Register as a New user
+          Register as a New User
         </h2>
       </div>
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
@@ -49,7 +53,7 @@ function SignUp() {
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div>
               <label
-                htmlFor="email"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
                 Full Name
@@ -57,13 +61,11 @@ function SignUp() {
               <div className="mt-1">
                 <input
                   type="text"
-                  name="text"
+                  name="name"
                   autoComplete="name"
                   required
                   value={name}
-                  onChange={(e) => {
-                    setName(e.target.value);
-                  }}
+                  onChange={(e) => setName(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
@@ -82,9 +84,7 @@ function SignUp() {
                   autoComplete="email"
                   required
                   value={email}
-                  onChange={(e) => {
-                    setEmail(e.target.value);
-                  }}
+                  onChange={(e) => setEmail(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
               </div>
@@ -103,9 +103,7 @@ function SignUp() {
                   autoComplete="current-password"
                   required
                   value={password}
-                  onChange={(e) => {
-                    setPassword(e.target.value);
-                  }}
+                  onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
                 {visible ? (
@@ -123,12 +121,13 @@ function SignUp() {
                 )}
               </div>
             </div>
-
-            <div className="">
+            <div>
               <label
                 htmlFor="avatar"
-                className="black text-sm font-medium  text-gray-700"
-              ></label>
+                className="block text-sm font-medium text-gray-700"
+              >
+                Avatar
+              </label>
               <div className="mt-2 flex items-center">
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
@@ -143,9 +142,9 @@ function SignUp() {
                 </span>
                 <label
                   htmlFor="file-input"
-                  className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
                 >
-                  <span>Upload a File</span>
+                  Upload Avatar
                   <input
                     type="file"
                     name="avatar"
@@ -157,16 +156,15 @@ function SignUp() {
                 </label>
               </div>
             </div>
-
-            <div className="">
+            <div>
               <button
                 type="submit"
-                className="group relative w-full h-[40px] flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 "
-                // onSubmit={handleSubmit}
+                className="w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 Submit
               </button>
             </div>
+            {error && <p className="text-red-500 text-sm">{error}</p>}
             <div className={`${styles.normalFlex} w-full`}>
               <h4>Already have an account?</h4>
               <Link to="/login" className="text-blue-600 pl-2">

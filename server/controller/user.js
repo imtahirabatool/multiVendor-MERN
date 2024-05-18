@@ -8,6 +8,7 @@ const { upload } = require("../multer");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
+const sendToken = require("../utils/jwtToken");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -17,7 +18,7 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     if (userEmail) {
       const filename = req.file.filename;
       const filePath = `uploads/${filename}`;
-      await fs.unlink(filePath);
+      await fs.unlink(filePath); // Using fs.promises.unlink
       return next(new ErrorHandler("User already exists.", 400));
     }
 
@@ -26,48 +27,35 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
 
     // Create user object
     const user = new User({
-      name: name,
-      email: email,
-      password: password,
+      name,
+      email,
+      password,
       avatar: fileURL,
     });
 
     // Save user to database
-    // await user.save();
+    await user.save(); // Make sure to save the user
 
     // Create activation token
-    const activationToken = createActivationToken({ email });
-    console.log("first activation token" + activationToken);
+    const activationToken = createActivationToken({ name, email, password, avatar: fileURL });
+    console.log("First activation token:", activationToken);
 
     // Create activation URL
     const activationUrl = `http://localhost:3000/activation/${activationToken}`;
 
     try {
       await sendMail({
-        email: email,
-        subject: "Activate Your account",
-        message: ` Hello ${name},\n\t Please click on the link below to activate your account:\n\n${activationUrl}`,
+        email,
+        subject: "Activate Your Account",
+        message: `Hello ${name},\n\nPlease click on the link below to activate your account:\n\n${activationUrl}`,
       });
       res.status(201).json({
         success: true,
-        message: `Please check your email:-\n\t${email} to activate your account`,
+        message: `Please check your email: ${email} to activate your account.`,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
-
-    // Send activation email
-    // await sendMail({
-    //   email: user.email,
-    //   subject: "Activate your account",
-    //   message: Hello ${user.name}, please click on the link to activate your account: ${activationUrl},
-    // });
-
-    // // Respond with success message
-    // res.status(201).json({
-    //   success: true,
-    //   message: Please check your email (${user.email}) to activate your account!,
-    // });
   } catch (error) {
     // Handle errors
     console.error("Error creating user:", error);
@@ -76,32 +64,39 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
 });
 
 // Create activation token
-const createActivationToken = (email) => {
-  return jwt.sign(email, process.env.ACTIVATION_SECRET, {
+const createActivationToken = (user) => {
+  return jwt.sign(user, process.env.ACTIVATION_SECRET, {
     expiresIn: process.env.ACTIVATION_EXPIRES,
   });
 };
 
-// activate user
+// Activate user
 router.post(
   "/activation",
   catchAsyncError(async (req, res, next) => {
     try {
       const { activation_token } = req.body;
-      const newUser = verify(activation_token.process.env.ACTIVATION_SECRET);
+      const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
 
       if (!newUser) {
         return next(new ErrorHandler("Invalid Token", 400));
       }
       const { name, email, password, avatar } = newUser;
-      User.create({
+
+      let user = await User.findOne({ email });
+      if (user) {
+        return next(new ErrorHandler("User already exists!", 400));
+      }
+      user = await User.create({
         name,
         email,
         password,
         avatar,
       });
-      sendToken(newUser, 201, res);
-    } catch (error) {}
+      sendToken(user, 201, res);
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
   })
 );
 
