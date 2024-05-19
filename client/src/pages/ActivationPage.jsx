@@ -5,22 +5,22 @@ import { server } from "../server";
 
 const ActivationPage = () => {
   const { activation_token } = useParams();
-  const [error, setError] = useState(false);
+  const [error, setError] = useState(null); // More detailed error state
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     if (activation_token) {
       const activationEmail = async () => {
         try {
-          console.log("Sending activation token:", { activation_token }); // Log the request payload
+          console.log("Sending activation token:", { activation_token });
           const res = await axios.post(`${server}/user/activation`, {
             activation_token,
           });
-          console.log(res.data.message);
+          console.log("Server response:", res.data.message);
           setSuccess(true);
         } catch (error) {
           console.error("Error response:", error.response); // Log the entire error response
-          setError(true);
+          setError(error.response ? error.response.data.message : "An unexpected error occurred.");
         }
       };
       activationEmail();
@@ -38,7 +38,7 @@ const ActivationPage = () => {
       }}
     >
       {error ? (
-        <p>Your token is expired!</p>
+        <p>{error}</p>
       ) : success ? (
         <p>Your account has been created successfully!</p>
       ) : (
