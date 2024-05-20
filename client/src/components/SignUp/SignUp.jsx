@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-import styles from "../../styles/style";
 import { Link } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import styles from "../../styles/style"; // Ensure the path is correct for your project
 import { server } from "../../server";
 
 function SignUp() {
@@ -19,7 +21,7 @@ function SignUp() {
     setAvatar(file);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     const formData = new FormData();
@@ -30,15 +32,22 @@ function SignUp() {
 
     const config = { headers: { "Content-Type": "multipart/form-data" } };
 
-    axios
-      .post(`${server}/user/create-user`, formData, config)
-      .then((res) => {
-        alert(res.data.message); // Corrected to access res.data.message
-      })
-      .catch((err) => {
-        console.error("Error submitting form:", err);
-        setError("Failed to create user. Please try again later."); // Example error handling
-      });
+    try {
+      const response = await axios.post(`${server}/user/create-user`, formData, config);
+      if (response && response.data) {
+        toast.success(response.data.message); // Using toast to display success message
+        setName("");
+        setEmail("");
+        setPassword("");
+        setAvatar(null); // Reset avatar input
+      } else {
+        toast.error("Unexpected response from server.");
+      }
+    } catch (error) {
+      const errorMessage = error.response?.data?.message || "Something went wrong!";
+      setError(errorMessage);
+      toast.error(errorMessage);
+    }
   };
 
   return (

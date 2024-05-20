@@ -9,6 +9,7 @@ const catchAsyncError = require("../middleware/catchAsyncError");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const sendToken = require("../utils/jwtToken");
+const { isAuthenticated } = require("../middleware/auth");
 
 router.post("/create-user", upload.single("file"), async (req, res, next) => {
   const { name, email, password } = req.body;
@@ -37,7 +38,9 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     }
 
     // Generate file URL using path.join
-    const fileURL = req.file ? path.join(__dirname, "..", "uploads", req.file.filename) : null;
+    const fileURL = req.file
+      ? path.join(__dirname, "..", "uploads", req.file.filename)
+      : null;
 
     // Create user object
     const user = new User({
@@ -51,7 +54,12 @@ router.post("/create-user", upload.single("file"), async (req, res, next) => {
     console.log(`User created: ${email}`);
 
     // Create activation token
-    const activationToken = createActivationToken({ name, email, password, avatar: fileURL });
+    const activationToken = createActivationToken({
+      name,
+      email,
+      password,
+      avatar: fileURL,
+    });
     console.log("Generated activation token:", activationToken);
 
     // Create activation URL
@@ -93,7 +101,10 @@ router.post(
       const { activation_token } = req.body;
       console.log("Received activation token:", activation_token);
 
-      const newUser = jwt.verify(activation_token, process.env.ACTIVATION_SECRET);
+      const newUser = jwt.verify(
+        activation_token,
+        process.env.ACTIVATION_SECRET
+      );
       console.log("Decoded token data:", newUser);
 
       if (!newUser) {
@@ -128,6 +139,55 @@ router.post(
       } else {
         return next(new ErrorHandler(error.message, 500));
       }
+    }
+  })
+);
+
+//login user
+router.post(
+  "/login-user",
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const { email, password } = req.body;
+      if (!email || !password) {
+        return next(new ErrorHandler("Please provide complete info!", 400));
+      }
+      const user = await User.findOne({ email }).select("+password");
+
+      if (!user) {
+        return next(new ErrorHandler("User doesn't exists!", 400));
+      }
+
+      const isPasswordValid = await user.comparePassword(password);
+
+      if (!isPasswordValid) {
+        return next(new ErrorHandler("Please provide correct info!", 400));
+      }
+
+      sendToken(user, 201, res);
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+//load user
+router.get(
+  "/getuser",
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const user = await User.findById(req.user.id);
+
+      if (!user) {
+        return next(new ErrorHandler("User doesn't exists!", 400));
+      }
+      res.status(200).json({
+        success: true,
+        user,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
     }
   })
 );
