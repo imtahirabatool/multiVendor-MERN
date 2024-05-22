@@ -13,7 +13,7 @@ import DropDown from "./DropDown";
 import { CgProfile } from "react-icons/cg";
 import Navbar from "./Navbar";
 
-const Header = (activeHeading) => {
+const Header = ({ activeHeading }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
@@ -182,16 +182,8 @@ const Header = (activeHeading) => {
           </Link>
         </div>
         <div className="flex items-center">
-          <AiOutlineHeart
-            size={30}
-            color="rgba(255, 255, 255, 0.83)"
-            className="mr-4"
-          />
-          <AiOutlineShoppingCart
-            size={30}
-            color="rgba(255, 255, 255, 0.83)"
-            className="mr-4"
-          />
+          <AiOutlineHeart size={30} color="rgba(255, 255, 255, 0.83)" className="mr-4" />
+          <AiOutlineShoppingCart size={30} color="rgba(255, 255, 255, 0.83)" className="mr-4" />
           <Link to="/login">
             <CgProfile size={30} color="rgba(255, 255, 255, 0.83)" />
           </Link>
