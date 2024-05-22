@@ -1,25 +1,21 @@
 import React from "react";
-import styles from "../../styles/style";
-import { navItems } from "../../static/data";
 import { Link } from "react-router-dom";
+import { navItems } from "../../static/data";
 
-const Navbar = (active) => {
+const Navbar = ({ active }) => {
   return (
-    <div className={`${styles.normalFlex}`}>
+    <div className="flex space-x-6">
       {navItems &&
-        navItems.map((i, index) => (
-          <div className="flex">
-            <Link
-              to={i.url}
-              className={`${
-                active === index + 1
-                  ? "text-[#17dd1f]"
-                  : "text[#fff] font-[500] px-6 cursor-pointer"
-              }`}
-            >
-              {i.title}
-            </Link>
-          </div>
+        navItems.map((item, index) => (
+          <Link
+            key={index}
+            to={item.url}
+            className={`${
+              active === index + 1 ? "text-[#17dd1f]" : "text-white font-medium"
+            } px-2 py-1`}
+          >
+            {item.title}
+          </Link>
         ))}
     </div>
   );

@@ -47,7 +47,7 @@ const Header = (activeHeading) => {
   return (
     <>
       <div className={`${styles.section}`}>
-        <div className="hidden 800px:h-[50px] 800px:my-[20px] 800px:flex items-center justify-between">
+        <div className="hidden md:flex md:h-[50px] md:my-[20px] items-center justify-between">
           <div>
             <Link to="/">
               <img
@@ -100,14 +100,14 @@ const Header = (activeHeading) => {
 
       <div
         className={`${
-          active === true ? "shadow-sm fixed top-0 left-0 z-10" : ""
-        } transition hidden 800px:flex items-center justify-between w-full bg-[#3321c8] h-[70px]`}
+          active ? "shadow-sm fixed top-0 left-0 z-10 w-full" : ""
+        } transition hidden md:flex items-center justify-between bg-[#3321c8] h-[70px]`}
       >
         <div
           className={`${styles.section} relative flex items-center justify-between`}
         >
           {/* Categories */}
-          <div className="relative h-[60px] mt-[10px] w-[270px] hidden 1000px:block">
+          <div className="relative h-[60px] mt-[10px] w-[270px] hidden lg:block">
             <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
             <button className="h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none rounded-t-md">
               All Categories
@@ -117,13 +117,12 @@ const Header = (activeHeading) => {
               className="absolute right-2 top-4 cursor-pointer"
               onClick={() => setDropDown(!dropDown)}
             />
-            {dropDown ? (
+            {dropDown && (
               <DropDown
                 categoriesData={categoriesData}
                 setDropDown={setDropDown}
               />
-            ) : null}
-            {/*navitems*/}
+            )}
           </div>
           <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />
@@ -132,8 +131,8 @@ const Header = (activeHeading) => {
           <div className="flex">
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                <AiOutlineHeart size={30} color="rgb(255 255 255/ 83%)" />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 right text-white p-0 m-0 font-mono text-[12px] leading-tight text-center">
+                <AiOutlineHeart size={30} color="rgba(255, 255, 255, 0.83)" />
+                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
                   0
                 </span>
               </div>
@@ -143,9 +142,9 @@ const Header = (activeHeading) => {
               <div className="relative cursor-pointer mr-[15px]">
                 <AiOutlineShoppingCart
                   size={30}
-                  color="rgb(255 255 255/ 83%)"
+                  color="rgba(255, 255, 255, 0.83)"
                 />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 right text-white p-0 m-0 font-mono text-[12px] leading-tight text-center">
+                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
                   1
                 </span>
               </div>
@@ -154,11 +153,48 @@ const Header = (activeHeading) => {
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
                 <Link to="/login">
-                  <CgProfile size={30} color="rgb(255 255 255/ 83%)" />
+                  <CgProfile size={30} color="rgba(255, 255, 255, 0.83)" />
                 </Link>
               </div>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile Header */}
+      <div className="md:hidden flex items-center justify-between w-full bg-[#3321c8] h-[70px] px-4">
+        <div className="flex items-center">
+          <button onClick={() => setDropDown(!dropDown)}>
+            <BiMenuAltLeft size={30} className="text-white" />
+          </button>
+          {dropDown && (
+            <DropDown
+              categoriesData={categoriesData}
+              setDropDown={setDropDown}
+            />
+          )}
+          <Link to="/" className="ml-4">
+            <img
+              src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+              alt="logo"
+              className="w-28"
+            />
+          </Link>
+        </div>
+        <div className="flex items-center">
+          <AiOutlineHeart
+            size={30}
+            color="rgba(255, 255, 255, 0.83)"
+            className="mr-4"
+          />
+          <AiOutlineShoppingCart
+            size={30}
+            color="rgba(255, 255, 255, 0.83)"
+            className="mr-4"
+          />
+          <Link to="/login">
+            <CgProfile size={30} color="rgba(255, 255, 255, 0.83)" />
+          </Link>
         </div>
       </div>
     </>
