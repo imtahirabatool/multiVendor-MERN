@@ -353,17 +353,16 @@ export const productData = [
     rating: 4,
     totalSell: 12,
     stock: 10,
-  },
-  {
+  },{
     id: 4,
     category: "Shoes",
     name: "New Trend shoes for gents with all sizes",
-    description:
-      "Product details are a crucial part of any eCommerce website or online marketplace. These details help potential customers to make informed decisions about the products they are interested in buying. A well-written product description can also be a powerful marketing tool that can help increase sales. Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
+    description: "Product details are a crucial part of any eCommerce website or online marketplace. These details help potential customers to make informed decisions about the products they are interested in buying. A well-written product description can also be a powerful marketing tool that can help increase sales. Product details typically include information about the product's features, specifications, dimensions, weight, materials, and other relevant information that can help customers understand the product better. The product details section should also include high-quality images and videos of the product, as well as customer reviews and ratings.",
     imageUrl: [
       {
         publicId: "shoes1",
-        url: "https://unsplash.com/photos/white-and-blue-nike-air-force-1-high-jvoZ-Aux9aw",
+        url: 
+        "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvBQPQMVNRd6TtDkGs2dCri0Y-rxKkFOiEWw&usqp=CAU",
       },
       {
         publicId: "shoes2",
@@ -383,7 +382,7 @@ export const productData = [
     rating: 5,
     totalSell: 49,
     stock: 10,
-  },    
+  },      
   {
     id: 5,
     category: "Music and Gaming",
