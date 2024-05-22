@@ -282,7 +282,7 @@ export const productData = [
       name: "Apple Inc.",
       shopAvatar: {
         publicId: "test",
-        url: "https://www.hatchwise.com/wp-content/uploads/2022/05/amazon-logo-1024x683.png",
+        url: "https://www.mega.pk/items_images/Apple+MacBook+Air+M2+Chip+MLY33+8GB+Ram+256GB+SSD+Midnight+Price+in+Pakistan%2C+Specifications%2C+Features_-_23441.webp",
       },
       ratings: 4.2,
     },

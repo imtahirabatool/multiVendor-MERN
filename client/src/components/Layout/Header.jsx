@@ -107,6 +107,7 @@ const Header = ({ activeHeading }) => {
           className={`${styles.section} relative flex items-center justify-between`}
         >
           {/* Categories */}
+          <div onClick={()=> setDropDown(!dropDown)}>
           <div className="relative h-[60px] mt-[10px] w-[270px] hidden lg:block">
             <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
             <button className="h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none rounded-t-md">
@@ -123,6 +124,7 @@ const Header = ({ activeHeading }) => {
                 setDropDown={setDropDown}
               />
             )}
+          </div>
           </div>
           <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />
