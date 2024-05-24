@@ -9,6 +9,7 @@ import {
   AiOutlineEye,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
 
 const ProductCard = ({ data }) => {
   const [isWishlist, setIsWishlist] = useState(false);
@@ -71,7 +72,7 @@ const ProductCard = ({ data }) => {
         <div className="py-2 flex items-center justify-between">
           <div className="flex">
             <h5 className={`${styles.productDiscountPrice}`}>
-              {data.price === 0 ? data.price : data.discount_price}$
+              {data.price === 0 ? data.price : data.discountPrice}$
             </h5>
             <h4 className={`${styles.price}`}>
               {data.price ? data.price + "$" : null}
@@ -117,6 +118,7 @@ const ProductCard = ({ data }) => {
           color="#444"
           title="Add to cart"
         />
+        {open ? <ProductDetailsCard setOpen={setOpen} data={data} /> : null}
       </div>
     </div>
   );
