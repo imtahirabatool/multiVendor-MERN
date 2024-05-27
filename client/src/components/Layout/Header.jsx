@@ -12,13 +12,16 @@ import { BiMenuAltLeft } from "react-icons/bi";
 import DropDown from "./DropDown";
 import { CgProfile } from "react-icons/cg";
 import Navbar from "./Navbar";
+import { useSelector } from "react-redux";
 
 const Header = ({ activeHeading }) => {
+  const { isAuthenticated, user } = useSelector((state) => state.user);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchData, setSearchData] = useState(null);
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
 
+  console.log(user);
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -107,24 +110,24 @@ const Header = ({ activeHeading }) => {
           className={`${styles.section} relative flex items-center justify-between`}
         >
           {/* Categories */}
-          <div onClick={()=> setDropDown(!dropDown)}>
-          <div className="relative h-[60px] mt-[10px] w-[270px] hidden lg:block">
-            <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
-            <button className="h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none rounded-t-md">
-              All Categories
-            </button>
-            <IoIosArrowDown
-              size={20}
-              className="absolute right-2 top-4 cursor-pointer"
-              onClick={() => setDropDown(!dropDown)}
-            />
-            {dropDown && (
-              <DropDown
-                categoriesData={categoriesData}
-                setDropDown={setDropDown}
+          <div onClick={() => setDropDown(!dropDown)}>
+            <div className="relative h-[60px] mt-[10px] w-[270px] hidden lg:block">
+              <BiMenuAltLeft size={30} className="absolute top-3 left-2" />
+              <button className="h-[100%] w-full flex justify-between items-center pl-10 bg-white font-sans text-lg font-[500] select-none rounded-t-md">
+                All Categories
+              </button>
+              <IoIosArrowDown
+                size={20}
+                className="absolute right-2 top-4 cursor-pointer"
+                onClick={() => setDropDown(!dropDown)}
               />
-            )}
-          </div>
+              {dropDown && (
+                <DropDown
+                  categoriesData={categoriesData}
+                  setDropDown={setDropDown}
+                />
+              )}
+            </div>
           </div>
           <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />
@@ -184,11 +187,26 @@ const Header = ({ activeHeading }) => {
           </Link>
         </div>
         <div className="flex items-center">
-          <AiOutlineHeart size={30} color="rgba(255, 255, 255, 0.83)" className="mr-4" />
-          <AiOutlineShoppingCart size={30} color="rgba(255, 255, 255, 0.83)" className="mr-4" />
+          <AiOutlineHeart
+            size={30}
+            color="rgba(255, 255, 255, 0.83)"
+            className="mr-4"
+          />
+          <AiOutlineShoppingCart
+            size={30}
+            color="rgba(255, 255, 255, 0.83)"
+            className="mr-4"
+          />{
+            isAuthenticated?(
+              <Link to="/profile">
+                {/* <img src="" alt="" /> */}
+              </Link>
+            ):(
           <Link to="/login">
             <CgProfile size={30} color="rgba(255, 255, 255, 0.83)" />
           </Link>
+          )
+        }
         </div>
       </div>
     </>
