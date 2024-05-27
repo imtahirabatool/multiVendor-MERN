@@ -1,7 +1,16 @@
 import React, { useEffect } from "react";
 import "./App.css";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { LoginPage, SignUpPage, ActivationPage, HomePage } from "./Routes.js";
+import {
+  LoginPage,
+  SignUpPage,
+  ActivationPage,
+  HomePage,
+  ProductsPage,
+  BestSellingPage,
+  EventsPage,
+  FAQPage,
+} from "./Routes.js";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import axios from "axios";
@@ -11,7 +20,7 @@ import { loadUser } from "./redux/actions/user.js";
 
 export default function App() {
   useEffect(() => {
-Store.dispatch(loadUser());
+    Store.dispatch(loadUser());
   }, []);
   return (
     <BrowserRouter>
@@ -23,6 +32,10 @@ Store.dispatch(loadUser());
           path="/activation/:activation_token"
           element={<ActivationPage />}
         />
+        <Route path="/products" element={<ProductsPage />} />
+        <Route path="/best-selling" element={<BestSellingPage />} />
+        <Route path="/events" element={<EventsPage />} />
+        <Route path="/faq" element={<FAQPage />} />
       </Routes>
       <ToastContainer
         position="top-right"

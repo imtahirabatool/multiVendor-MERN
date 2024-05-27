@@ -2,9 +2,13 @@ import React from "react";
 import styles from "../../styles/style";
 import CountDown from "./CountDown";
 
-const EventCard = () => {
+const EventCard = ({ active }) => {
   return (
-    <div className="w-full block bg-white rounded-lg lg:flex p-2 mb-12">
+    <div
+      className={`w-full block bg-white rounded-lg ${
+        active ? "unset" : "mb-12"
+      } lg:flex p-2 mb-12`}
+    >
       <div className="w-full lg:w-1/2 m-auto">
         <img
           src="https://store.storeimages.cdn-apple.com/4982/as-images.apple.com/is/mbp-spacegray-select-202206_GEO_EMEA_LANG_FR?wid=904&hei=840&fmt=jpeg&qlt=90&.v=1654021658445"
