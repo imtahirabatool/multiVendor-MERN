@@ -12,17 +12,18 @@ export const userReducer = createReducer(initialState, (builder) => {
     .addCase('LoadUserRequest', (state) => {
       state.loading = true;
     })
-    .addCase('LoadingUserSuccess', (state, action) => {
+    .addCase('LoadUserSuccess', (state, action) => {
       state.isAuthenticated = true;
       state.loading = false;
       state.user = action.payload;
+      state.error = null; // Clear any previous errors
     })
     .addCase('LoadUserFail', (state, action) => {
       state.loading = false;
       state.error = action.payload;
       state.isAuthenticated = false;
     })
-    .addCase('clearErrors', (state) => {
+    .addCase('ClearErrors', (state) => {
       state.error = null;
     });
 });
