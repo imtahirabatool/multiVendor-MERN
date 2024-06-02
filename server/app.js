@@ -5,31 +5,32 @@ const cookieParser = require("cookie-parser");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 
-app.use(express.json());
-app.use(cookieParser());
+// Middleware
+app.use(express.json()); // Use express.json() for parsing JSON bodies
+app.use(bodyParser.urlencoded({ extended: true })); // bodyParser for handling URL-encoded bodies
+app.use(cookieParser()); // Cookie parser middleware
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    credentials: true,
+    origin: "http://localhost:3000", // Allow requests from localhost:3000
+    credentials: true, // Allow credentials (cookies, authorization headers)
   })
 );
-app.use("/", express.static("uploads"));
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use("/", express.static("uploads")); // Serve static files from the "uploads" directory
 
 // Config
-if (process.env.NODE_ENV !== "PRODUCTION") {
+if (process.env.NODE_ENV !== "production") {
   require("dotenv").config({
     path: "server/config/.env",
   });
 }
 
-//import routes
+// Import routes
 const user = require("./controller/user");
 
-// Mount user routes
-app.use("/api/v2/user", user); // Added a forward slash (/) before "api/v2/user"
+// Mount routes
+app.use("/api/v2/user", user); // Mount user routes under /api/v2/user
 
-// Error handling middleware
+// Error handling middleware - should be placed at the end
 app.use(ErrorHandler);
 
 module.exports = app;

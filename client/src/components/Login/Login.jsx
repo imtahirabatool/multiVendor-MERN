@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { server } from "../../server";
 import { toast } from "react-toastify";
-import styles from "../../styles/style";
+// import styles from "../../styles/style";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -95,21 +95,16 @@ const Login = () => {
                 )}
               </div>
             </div>
-            <div className={`${styles.noramlFlex} justify-between`}>
-              <div className={`${styles.noramlFlex}`}>
+            <div className="flex items-center justify-between">
+              <label htmlFor="remember-me" className="flex items-center">
                 <input
                   type="checkbox"
                   name="remember-me"
                   id="remember-me"
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
                 />
-                <label
-                  htmlFor="remember-me"
-                  className="ml-2 block text-sm text-gray-900"
-                >
-                  Remember me
-                </label>
-              </div>
+                <span className="ml-2 text-sm text-gray-900">Remember me</span>
+              </label>
               <div className="text-sm">
                 <a
                   href=".forgot-password"
@@ -127,9 +122,9 @@ const Login = () => {
                 Submit
               </button>
             </div>
-            <div className={`${styles.noramlFlex} w-full`}>
-              <h4>Not have any account?</h4>
-              <Link to="/sign-up" className="text-blue-600 pl-2">
+            <div className="flex items-center justify-center mt-4">
+              <h4 className="mr-2">Don't have an account?</h4>
+              <Link to="/sign-up" className="text-blue-600">
                 Sign Up
               </Link>
             </div>

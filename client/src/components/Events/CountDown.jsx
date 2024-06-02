@@ -11,7 +11,7 @@ const CountDown = () => {
   }, []);
 
   function calculateTimeLeft() {
-    const difference = +new Date("2024-5-27") - new Date();
+    const difference = +new Date("2024-6-27") - new Date();
     let timeLeft = {};
     if (difference > 0) {
       timeLeft = {

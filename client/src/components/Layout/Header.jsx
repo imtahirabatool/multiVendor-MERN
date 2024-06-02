@@ -161,7 +161,7 @@ const Header = ({ activeHeading }) => {
                   <Link to="/profile">
                     <img
                       src={`${backendUrl}${user.avatar}`}
-                      alt=""
+                      alt="Profile"
                       className="w-[35px] rounded-full h-[35px]"
                     />
                   </Link>
@@ -174,6 +174,8 @@ const Header = ({ activeHeading }) => {
             </div>
           </div>
         </div>
+        {/* Cart popup */}
+        {openCart && <Cart setOpenCart={setOpenCart} />}
       </div>
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between w-full bg-[#3321c8] h-[70px] px-4">
@@ -229,9 +231,9 @@ const Header = ({ activeHeading }) => {
               {isAuthenticated ? (
                 <Link to="/profile">
                   <img
-                    src={`${backendUrl}${user.avatar}`}
+                    src={`${user.avatar?.url}`}
                     alt=""
-                    className="w-[35px rounded-full h-[35px]"
+                    className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
                   />
                 </Link>
               ) : (
