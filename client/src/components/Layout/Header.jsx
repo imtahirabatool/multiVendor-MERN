@@ -12,6 +12,7 @@ import { CgProfile } from "react-icons/cg";
 import Navbar from "./Navbar";
 import DropDown from "./DropDown";
 import Cart from "../cart/Cart";
+import Wishlist from "../Wishlist/Wishlist";
 import { backendUrl } from "../../server";
 import styles from "../../styles/style";
 import { categoriesData, productData } from "../../static/data";
@@ -23,6 +24,7 @@ const Header = ({ activeHeading }) => {
   const [active, setActive] = useState(false);
   const [dropDown, setDropDown] = useState(false);
   const [openCart, setOpenCart] = useState(false);
+  const [openWishlist, setOpenWishlist] = useState(false);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -128,6 +130,8 @@ const Header = ({ activeHeading }) => {
               )}
             </div>
           </div>
+
+          {/* navitems */}
           <div className={`${styles.normalFlex}`}>
             <Navbar active={activeHeading} />
           </div>
@@ -135,9 +139,13 @@ const Header = ({ activeHeading }) => {
           <div className="flex">
             <div className={`${styles.normalFlex}`}>
               <div className="relative cursor-pointer mr-[15px]">
-                <AiOutlineHeart size={30} color="rgba(255, 255, 255, 0.83)" />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
-                  0
+                <AiOutlineHeart
+                  size={30}
+                  color="rgba(255, 255, 255, 0.83)"
+                  onClick={() => setOpenWishlist(true)}
+                />
+                <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
+                  1
                 </span>
               </div>
             </div>
@@ -149,7 +157,7 @@ const Header = ({ activeHeading }) => {
                   color="rgba(255, 255, 255, 0.83)"
                   onClick={() => setOpenCart(true)}
                 />
-                <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
+                <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
                   1
                 </span>
               </div>
@@ -176,6 +184,8 @@ const Header = ({ activeHeading }) => {
         </div>
         {/* Cart popup */}
         {openCart && <Cart setOpenCart={setOpenCart} />}
+        {/* Wishlist popup */}
+        {openWishlist && <Wishlist setOpenWishlist={setOpenWishlist} />}
       </div>
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between w-full bg-[#3321c8] h-[70px] px-4">
@@ -204,9 +214,10 @@ const Header = ({ activeHeading }) => {
                 size={30}
                 color="rgba(255, 255, 255, 0.83)"
                 className="mr-4"
+                onClick={() => setOpenWishlist(true)}
               />
-              <span className="absolute right-0 top rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 font-mono text-white text-[12px] leading ">
-                1
+              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
+                0
               </span>
             </div>
           </div>
@@ -244,7 +255,10 @@ const Header = ({ activeHeading }) => {
             </div>
           </div>
           {/* cart popup */}
-          {openCart && <Cart setOpenCart={setOpenCart} />}
+          {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
+
+          {/* wishList popup */}
+          {openWishlist ? <Wishlist setOpenWishlist={setOpenWishlist} /> : null}
         </div>
       </div>
     </>

@@ -34,7 +34,7 @@ const Cart = ({ setOpenCart }) => {
 
   return (
     <div className="fixed top-0 left-0 w-full h-screen bg-[#0000004b] z-10 overflow-y-auto">
-      <div className="fixed top-0 right-0 h-full w-[25%] bg-white flex flex-col justify-start shadow-sm">
+      <div className="fixed top-0 right-0 h-full w-[90%] md:w-[25%] bg-white flex flex-col justify-start shadow-sm">
         <div className="flex justify-end p-5">
           <AiOutlineClose
             size={25}
@@ -82,7 +82,7 @@ const CartSingle = ({ data }) => {
   return (
     <div className="border-b p-4">
       <div className="w-full flex items-center">
-        <div className="">
+        <div className="flex flex-col items-center">
           <div
             className={`bg-[#e44243] border border-[#e4434373] rounded-full w-[25px] h-[25px] ${styles.normalFlex} justify-center cursor-pointer`}
             onClick={() => setValue(value + 1)}
@@ -102,8 +102,8 @@ const CartSingle = ({ data }) => {
           alt="product"
           className="w-[80px] h-[80px] ml-2"
         />
-        <div className="pl-[5px]">
-          <h1>{data.name}</h1>
+        <div className="pl-[5px] flex-1">
+          <h1 className="text-sm md:text-base">{data.name}</h1>
           <h4 className="font-[400] text-[15px] text-[#00000082]">
             ${data.price} * {value}
           </h4>
