@@ -10,7 +10,7 @@ import {
 
 const ProductsDetail = ({ data }) => {
   const [count, setCount] = useState(1);
-  const [click, setClick] = useState(false);
+  // const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
 
@@ -46,11 +46,7 @@ const ProductsDetail = ({ data }) => {
                   className="w-[80%] mb-4"
                 />
                 <div className="flex w-full">
-                  <div
-                    className={`${
-                      select === 0 ? "border" : "null"
-                    } cursor-pointer`}
-                  >
+                  <div className={`${select === 0 ? "border" : ""} cursor-pointer`}>
                     <img
                       src={data?.imageUrl[0].url}
                       alt=""
@@ -58,11 +54,7 @@ const ProductsDetail = ({ data }) => {
                       onClick={() => setSelect(0)}
                     />
                   </div>
-                  <div
-                    className={`${
-                      select === 1 ? "border" : "null"
-                    } cursor-pointer`}
-                  >
+                  <div className={`${select === 1 ? "border" : ""} cursor-pointer`}>
                     <img
                       src={data?.imageUrl[1].url}
                       alt=""
@@ -72,7 +64,7 @@ const ProductsDetail = ({ data }) => {
                   </div>
                 </div>
               </div>
-
+  
               <div className="w-full 800px:w-[50%] pt-5">
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
                 <p>{data.description}</p>
@@ -84,7 +76,7 @@ const ProductsDetail = ({ data }) => {
                     {data.price ? data.price + "$" : null}
                   </h3>
                 </div>
-
+  
                 <div className="flex items-center mt-12 justify-between pr-3">
                   <div className="">
                     <button
@@ -136,22 +128,22 @@ const ProductsDetail = ({ data }) => {
                     alt=""
                     className="w-[50px] h-[50px] rounded-full mr-2"
                   />
-                </div>
-                <div className="pr-8">
-                  <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                    {data.shop.name}
-                  </h3>
-                  <h5 className="pb-3 text-[15px]">
-                    ({data.shop.ratings}) Ratings
-                  </h5>
-                </div>
-                <div
-                  className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
-                  onClick={handleMessageSubmit}
-                >
-                  <span className="text-white flex items-center">
-                    Send Message <AiOutlineMessage className="ml-1" />
-                  </span>
+                  <div className="flex flex-col">
+                    <h3 className={`${styles.shop_name} pb-1 pt-1`}>
+                      {data.shop.name}
+                    </h3>
+                    <h5 className="pb-3 text-[15px]">
+                      ({data.shop.ratings}) Ratings
+                    </h5>
+                  </div>
+                  <div
+                    className={`${styles.button} bg-[#6443d1] !ml-[50px] !rounded !h-11`}
+                    onClick={handleMessageSubmit}
+                  >
+                    <span className="text-white flex items-center">
+                      Send Message <AiOutlineMessage className="ml-1" />
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -163,6 +155,7 @@ const ProductsDetail = ({ data }) => {
       ) : null}
     </div>
   );
+  
 };
 
 const ProductDetailsInfo = ({ data }) => {
