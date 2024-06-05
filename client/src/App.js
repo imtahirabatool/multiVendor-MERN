@@ -10,6 +10,10 @@ import {
   BestSellingPage,
   EventsPage,
   FAQPage,
+  OrderSuccessPage,
+  ProductDetailsPage,
+  CheckOutPage,
+  PaymentPage,
 } from "./Routes.js";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -38,9 +42,13 @@ export default function App() {
               element={<ActivationPage />}
             />
             <Route path="/products" element={<ProductsPage />} />
+            <Route path="/product/:name" element={<ProductDetailsPage />} />
             <Route path="/best-selling" element={<BestSellingPage />} />
             <Route path="/events" element={<EventsPage />} />
             <Route path="/faq" element={<FAQPage />} />
+            <Route path="/checkout" element={<CheckOutPage />} />
+            <Route path="/payment" element={<PaymentPage />} />
+            <Route path="/order/success/:id" element={<OrderSuccessPage />} />
           </Routes>
           <ToastContainer
             position="top-right"
