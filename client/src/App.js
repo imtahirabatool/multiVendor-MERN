@@ -14,6 +14,7 @@ import {
   ProductDetailsPage,
   CheckOutPage,
   PaymentPage,
+  ProfilePage,
 } from "./Routes.js";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -22,13 +23,15 @@ import "react-toastify/dist/ReactToastify.css";
 import Store from "./redux/store.js";
 import { loadUser } from "./redux/actions/user.js";
 import { useSelector } from "react-redux";
+import ProtectedRoute from "./ProctedRoute.js";
 
 export default function App() {
-  const { loading } = useSelector((state) => state.user);
+  const { loading, isAuthenticated } = useSelector((state) => state.user);
 
   useEffect(() => {
     Store.dispatch(loadUser());
   }, []);
+
   return (
     <>
       {loading ? null : (
@@ -49,6 +52,14 @@ export default function App() {
             <Route path="/checkout" element={<CheckOutPage />} />
             <Route path="/payment" element={<PaymentPage />} />
             <Route path="/order/success/:id" element={<OrderSuccessPage />} />
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRoute isAuthenticated={isAuthenticated}>
+                  <ProfilePage />
+                </ProtectedRoute>
+              }
+            />
           </Routes>
           <ToastContainer
             position="top-right"

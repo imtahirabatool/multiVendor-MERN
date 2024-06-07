@@ -47,6 +47,11 @@ const Header = ({ activeHeading }) => {
     };
   }, []);
 
+  // console.log(user);
+  // console.log(`Backend URL: ${backendUrl}`);
+  // console.log(`User Avatar: ${user.avatar}`);
+  // console.log(`Full Avatar URL: ${backendUrl}${user.avatar}`);
+
   return (
     <>
       {!loading && (
@@ -187,6 +192,7 @@ const Header = ({ activeHeading }) => {
         {/* Wishlist popup */}
         {openWishlist && <Wishlist setOpenWishlist={setOpenWishlist} />}
       </div>
+
       {/* Mobile Header */}
       <div className="md:hidden flex items-center justify-between w-full bg-[#3321c8] h-[70px] px-4">
         <div className="flex items-center">
@@ -261,6 +267,8 @@ const Header = ({ activeHeading }) => {
           {openWishlist ? <Wishlist setOpenWishlist={setOpenWishlist} /> : null}
         </div>
       </div>
+
+      {/* header sidebar */}
     </>
   );
 };
