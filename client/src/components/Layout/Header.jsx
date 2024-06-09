@@ -81,13 +81,14 @@ const Header = ({ activeHeading }) => {
                 className="absolute right-2 top-1.5 cursor-pointer"
               />
               {searchData && (
-                <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4">
+                <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4 w-full">
                   {searchData.map((product) => (
-                    <Link to={`/product/${product.id}`} key={product.id}>
+                    // <Link to={`/product/${product.id}`} key={product.id}>
+                    <Link to={`/product/${product.id}`} key={product.id} onClick={() => console.log(`/product/${product.id}`)}>
                       <div className="w-full flex items-center py-3">
-                        {product.image_Url && product.image_Url[0]?.url && (
+                        {product.imageUrl && product.imageUrl[0]?.url && (
                           <img
-                            src={product.image_Url[0].url}
+                            src={product.imageUrl[0].url}
                             alt={product.name}
                             className="w-[40px] h-[40px] mr-[10px]"
                           />
@@ -236,33 +237,59 @@ const Header = ({ activeHeading }) => {
 
       {/* Header Sidebar */}
       {open && (
-  <div className="fixed w-full bg-[#0000005f] z-40 h-full top-0 left-0">
-    <div className="fixed w-[70%] bg-[#fff] h-full top-0 left-0 z-50 overflow-y-scroll">
-      <div className="w-full flex justify-between pr-3">
-        <div className={`${styles.normalFlex}`}>
-          <div className="relative mt-5 ml-4 cursor-pointer mr-[15px]">
-            <AiOutlineHeart
-              size={30}
-              color="rgba(0, 0, 0, 0.83)" 
-              onClick={() => setOpenWishlist(true)}
-            />
-            <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
-              1
-            </span>
+        <div className="fixed w-full bg-[#0000005f] z-40 h-full top-0 left-0">
+          <div className="fixed w-[70%] bg-[#fff] h-full top-0 left-0 z-50 overflow-y-scroll">
+            <div className="w-full flex justify-between pr-3">
+              <div className={`${styles.normalFlex}`}>
+                <div className="relative mt-5 ml-4 cursor-pointer mr-[15px]">
+                  <AiOutlineHeart
+                    size={30}
+                    color="rgba(0, 0, 0, 0.83)"
+                    onClick={() => setOpenWishlist(true)}
+                  />
+                  <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
+                    1
+                  </span>
+                </div>
+              </div>
+
+              <AiOutlineClose
+                size={30}
+                className="ml-4 mt-5 cursor-pointer"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+
+            <div className="my-8 w-[92%] m-auto relative h-[40px]">
+              <input
+                type="search"
+                placeholder="Search"
+                className="h-[40px] w-full px-2 border-[#3957db] border-[2px] rounded-md"
+                value={searchTerm}
+                onChange={handleSearchChange}
+              />
+              {searchData && (
+                <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4 w-full">
+                  {searchData.map((product) => (
+                    <Link to={`/product/${product.id}`} key={product.id}>
+                      <div className="w-full flex items-center py-3">
+                        {product.imageUrl && product.imageUrl[0]?.url && (
+                          <img
+                            src={product.imageUrl[0].url}
+                            alt={product.name}
+                            className="w-[40px] h-[40px] mr-[10px]"
+                          />
+                        )}
+                        <h1>{product.name}</h1>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
         </div>
-
-        <AiOutlineClose
-          size={30}
-          className="ml-4 mt-5 cursor-pointer"
-          onClick={() => setOpen(false)}
-        />
-      </div>
-      <div className="mt-5">{/* Add your sidebar content here */}</div>
-    </div>
-  </div>
-)}
-
+      )}
     </>
   );
 };

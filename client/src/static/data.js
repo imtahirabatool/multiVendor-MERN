@@ -203,7 +203,7 @@ export const categoriesData = [
     title: "Cosmetics and Body Care",
     subTitle: "",
     imageUrl:
-      "https://cdn.shopify.com/s/files/1/0277/5305/2412/products/SydneyShowerSetA.png?v=1599754611",
+      "https://indian-retailer.s3.ap-south-1.amazonaws.com/s3fs-public/2021-07/kosme1.png",
   },
   {
     id: 3,
