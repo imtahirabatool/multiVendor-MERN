@@ -196,56 +196,73 @@ const Header = ({ activeHeading }) => {
       </div>
 
       {/* Mobile Header */}
-      <div className="w-full h-[70px] fixed bg-[#fff] z-50 top-0 left-0 shadow-sm 800px:hidden">
-        <div className="w-full flex items-center justify-between px-4">
-          <BiMenuAltLeft
-            size={40}
-            className="cursor-pointer"
-            onClick={() => setOpen(true)}
-          />
-          <Link to="/" className="flex-1 flex justify-center">
-            <img
-              src="https://shopo.quomodothemes.website/assets/images/logo.svg"
-              alt="logo"
-              className="mt-3 cursor-pointer"
-            />
-          </Link>
+      <div
+        className={`${
+          active ? "shadow-sm fixed top-0 left-0 z-50" : ""
+        } w-full h-[60px] bg-[#fff] top-0 left-0 800px:hidden`}
+      >
+        <div className="w-full flex items-center justify-between">
           <div>
-            <div className="relative mr-[20px]">
-              <AiOutlineShoppingCart size={30} className="cursor-pointer" />
-              <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
-                1
-              </span>
-            </div>
+            <BiMenuAltLeft
+              size={40}
+              className="ml-4 cursor-pointer"
+              onClick={() => setOpen(true)}
+            />
           </div>
+          <div>
+            <Link to="/">
+              <img
+                src="https://shopo.quomodothemes.website/assets/images/logo.svg"
+                alt=""
+                className="mt-3 cursor-pointer"
+              />
+            </Link>
+          </div>
+          <div
+            className="relative mr-[20px] cursor-pointer"
+            onClick={() => setOpenCart(true)}
+          >
+            <AiOutlineShoppingCart size={30} />
+            <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
+              1
+            </span>
+          </div>
+          {/* Cart popup */}
+          {openCart && <Cart setOpenCart={setOpenCart} />}
+          {/* Wishlist popup */}
+          {openWishlist && <Wishlist setOpenWishlist={setOpenWishlist} />}
         </div>
       </div>
 
-      {/* header sidebar */}
+      {/* Header Sidebar */}
       {open && (
-        <div className={`fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0`}>
-          <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
-            <div className="w-full justify-between flex pr-3">
-              <div>
-                <div
-                  className="relative mr-[15px]"
-                  onClick={() => setOpenWishlist(true) || setOpen(false)}
-                >
-                  <AiOutlineHeart size={30} className="mt-5 ml-3" />
-                  <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
-                    1
-                  </span>
-                </div>
-              </div>
-              <AiOutlineClose
-                size={30}
-                className="ml-4 mt-5"
-                onClick={() => setOpen(false)}
-              />
-            </div>
+  <div className="fixed w-full bg-[#0000005f] z-40 h-full top-0 left-0">
+    <div className="fixed w-[70%] bg-[#fff] h-full top-0 left-0 z-50 overflow-y-scroll">
+      <div className="w-full flex justify-between pr-3">
+        <div className={`${styles.normalFlex}`}>
+          <div className="relative mt-5 ml-4 cursor-pointer mr-[15px]">
+            <AiOutlineHeart
+              size={30}
+              color="rgba(0, 0, 0, 0.83)" 
+              onClick={() => setOpenWishlist(true)}
+            />
+            <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
+              1
+            </span>
           </div>
         </div>
-      )}
+
+        <AiOutlineClose
+          size={30}
+          className="ml-4 mt-5 cursor-pointer"
+          onClick={() => setOpen(false)}
+        />
+      </div>
+      <div className="mt-5">{/* Add your sidebar content here */}</div>
+    </div>
+  </div>
+)}
+
     </>
   );
 };
