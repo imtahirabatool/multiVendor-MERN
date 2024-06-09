@@ -80,25 +80,29 @@ const Header = ({ activeHeading }) => {
                 size={30}
                 className="absolute right-2 top-1.5 cursor-pointer"
               />
-              {searchData && (
+              {searchData && searchData.length !== 0 ? (
                 <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4 w-full">
-                  {searchData.map((product) => (
-                    // <Link to={`/product/${product.id}`} key={product.id}>
-                    <Link to={`/product/${product.id}`} key={product.id} onClick={() => console.log(`/product/${product.id}`)}>
-                      <div className="w-full flex items-center py-3">
-                        {product.imageUrl && product.imageUrl[0]?.url && (
-                          <img
-                            src={product.imageUrl[0].url}
-                            alt={product.name}
-                            className="w-[40px] h-[40px] mr-[10px]"
-                          />
-                        )}
-                        <h1>{product.name}</h1>
-                      </div>
-                    </Link>
-                  ))}
+                  {searchData &&
+                    searchData.map((i, index) => {
+                      const d = i.name;
+                      const ProductName = d.replace(/\s+/g, "-");
+                      return (
+                        <Link to={`/product/${ProductName}`}>
+                          <div className="w-full flex items-center py-3">
+                            {i.imageUrl && i.imageUrl[0]?.url && (
+                              <img
+                                src={i.imageUrl[0].url}
+                                alt={i.name}
+                                className="w-[40px] h-[40px] mr-[10px]"
+                              />
+                            )}
+                            <h1>{i.name}</h1>
+                          </div>
+                        </Link>
+                      );
+                    })}
                 </div>
-              )}
+              ) : null}
             </div>
             <div className={`${styles.button}`}>
               <Link to="/seller">
@@ -268,24 +272,29 @@ const Header = ({ activeHeading }) => {
                 value={searchTerm}
                 onChange={handleSearchChange}
               />
-              {searchData && (
+              {searchData && searchData.length !== 0 ? (
                 <div className="absolute min-h-[30vh] bg-slate-50 shadow-sm-2 z-[9] p-4 w-full">
-                  {searchData.map((product) => (
-                    <Link to={`/product/${product.id}`} key={product.id}>
-                      <div className="w-full flex items-center py-3">
-                        {product.imageUrl && product.imageUrl[0]?.url && (
-                          <img
-                            src={product.imageUrl[0].url}
-                            alt={product.name}
-                            className="w-[40px] h-[40px] mr-[10px]"
-                          />
-                        )}
-                        <h1>{product.name}</h1>
-                      </div>
-                    </Link>
-                  ))}
+                  {searchData &&
+                    searchData.map((i, index) => {
+                      const d = i.name;
+                      const ProductName = d.replace(/\s+/g, "-");
+                      return (
+                        <Link to={`/product/${ProductName}`}>
+                          <div className="w-full flex items-center py-3">
+                            {i.imageUrl && i.imageUrl[0]?.url && (
+                              <img
+                                src={i.imageUrl[0].url}
+                                alt={i.name}
+                                className="w-[40px] h-[40px] mr-[10px]"
+                              />
+                            )}
+                            <h1>{i.name}</h1>
+                          </div>
+                        </Link>
+                      );
+                    })}
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         </div>
