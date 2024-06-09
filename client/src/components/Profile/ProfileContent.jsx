@@ -45,77 +45,75 @@ const ProfileContent = ({ active }) => {
           <br />
           <br />
           <div className="w-full px-5">
-            <form onSubmit={handleSubmit}>
-              <div className="w-full flex pb-3">
-                <div className="w-full 800px:w-[50%]">
+            <form onSubmit={handleSubmit} className="w-full">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-4 pb-3">
+                <div className="">
                   <label className="block pb-2">Full Name</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className={`${styles.input} w-full`}
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
                   />
                 </div>
-                <div className="w-full 800px:w-[50%]">
+                <div className="">
                   <label className="block pb-2">Email Address</label>
                   <input
                     type="email"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className={`${styles.input} w-full`}
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
                   />
                 </div>
-              </div>
-              <div className="w-full flex pb-3">
-                <div className="w-full 800px:w-[50%]">
+                <div className="">
                   <label className="block pb-2">Phone Number</label>
                   <input
                     type="tel"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className={`${styles.input} w-full`}
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value)}
                     required
                   />
                 </div>
-                <div className="w-full 800px:w-[50%]">
+                <div className="">
                   <label className="block pb-2">Zip Code</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className={`${styles.input} w-full`}
                     value={zipCode}
                     onChange={(e) => setZipCode(e.target.value)}
                     required
                   />
                 </div>
-              </div>
-              <div className="w-full flex pb-3">
-                <div className="w-full 800px:w-[50%]">
+                <div className="w-full ">
                   <label className="block pb-2">Address 1</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className={`${styles.input} w-full`}
                     value={address1}
                     onChange={(e) => setAddress1(e.target.value)}
                     required
                   />
                 </div>
-                <div className="w-full 800px:w-[50%]">
+                <div className="w-full ">
                   <label className="block pb-2">Address 2</label>
                   <input
                     type="text"
-                    className={`${styles.input} !w-[95%] mb-4 800px:mb-0`}
+                    className={`${styles.input} w-full`}
                     value={address2}
                     onChange={(e) => setAddress2(e.target.value)}
                   />
                 </div>
               </div>
-              <input
-                value="Update"
-                className="w-[250px] h-[40px] border border-[#3a24db] text-center text-[#3a24db] rounded-[3px] mt-8 cursor-pointer"
-                type="submit"
-              />
+              <div className="flex justify-center">
+                <input
+                  value="Update"
+                  className="w-[200px] h-[40px] border border-[#3a24db] text-[#3a24db] rounded-[3px] mt-3 cursor-pointer"
+                  type="submit"
+                />
+              </div>
             </form>
           </div>
         </>
