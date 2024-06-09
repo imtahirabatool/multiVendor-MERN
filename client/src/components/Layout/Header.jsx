@@ -5,6 +5,7 @@ import {
   AiOutlineSearch,
   AiOutlineHeart,
   AiOutlineShoppingCart,
+  AiOutlineClose,
 } from "react-icons/ai";
 import { IoIosArrowDown, IoIosArrowForward } from "react-icons/io";
 import { BiMenuAltLeft } from "react-icons/bi";
@@ -25,6 +26,7 @@ const Header = ({ activeHeading }) => {
   const [dropDown, setDropDown] = useState(false);
   const [openCart, setOpenCart] = useState(false);
   const [openWishlist, setOpenWishlist] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleSearchChange = (e) => {
     const term = e.target.value;
@@ -194,81 +196,56 @@ const Header = ({ activeHeading }) => {
       </div>
 
       {/* Mobile Header */}
-      <div className="md:hidden flex items-center justify-between w-full bg-[#3321c8] h-[70px] px-4">
-        <div className="flex items-center">
-          <button onClick={() => setDropDown(!dropDown)}>
-            <BiMenuAltLeft size={30} className="text-white" />
-          </button>
-          {dropDown && (
-            <DropDown
-              categoriesData={categoriesData}
-              setDropDown={setDropDown}
-            />
-          )}
-          <Link to="/" className="ml-4">
+      <div className="w-full h-[70px] fixed bg-[#fff] z-50 top-0 left-0 shadow-sm 800px:hidden">
+        <div className="w-full flex items-center justify-between px-4">
+          <BiMenuAltLeft
+            size={40}
+            className="cursor-pointer"
+            onClick={() => setOpen(true)}
+          />
+          <Link to="/" className="flex-1 flex justify-center">
             <img
               src="https://shopo.quomodothemes.website/assets/images/logo.svg"
               alt="logo"
-              className="w-28"
+              className="mt-3 cursor-pointer"
             />
           </Link>
-        </div>
-        <div className="flex items-center">
-          <div className={`${styles.normalFlex}`}>
-            <div className="relative cursor-pointer mr-[15px]">
-              <AiOutlineHeart
-                size={30}
-                color="rgba(255, 255, 255, 0.83)"
-                className="mr-4"
-                onClick={() => setOpenWishlist(true)}
-              />
-              <span className="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
-                0
-              </span>
-            </div>
-          </div>
-
-          <div className={`${styles.normalFlex}`}>
-            <div
-              className="relative cursor-pointer mr-[15px]"
-              onClick={() => setOpenCart(true)}
-            >
-              <AiOutlineShoppingCart
-                size={30}
-                color="rgba(255, 255, 255, 0.83)"
-                className="mr-4"
-              />
-              <span className="absolute right-0 top rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 font-mono text-white text-[12px] leading ">
+          <div>
+            <div className="relative mr-[20px]">
+              <AiOutlineShoppingCart size={30} className="cursor-pointer" />
+              <span className="absolute -right-1 -top-1 rounded-full bg-[#3bc177] w-4 h-4 text-white text-[12px] leading-tight text-center">
                 1
               </span>
             </div>
           </div>
-          <div className={`${styles.normalFlex}`}>
-            <div className="relative cursor-pointer mr-[15px]">
-              {isAuthenticated ? (
-                <Link to="/profile">
-                  <img
-                    src={`${user.avatar?.url}`}
-                    alt=""
-                    className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
-                  />
-                </Link>
-              ) : (
-                <Link to="/login">
-                  <CgProfile size={30} color="rgba(255, 255, 255, 0.83)" />
-                </Link>
-              )}
-            </div>
-          </div>
-          {/* cart popup */}
-          {openCart ? <Cart setOpenCart={setOpenCart} /> : null}
-
-          {/* wishList popup */}
-          {openWishlist ? <Wishlist setOpenWishlist={setOpenWishlist} /> : null}
         </div>
       </div>
 
       {/* header sidebar */}
+      {open && (
+        <div className={`fixed w-full bg-[#0000005f] z-20 h-full top-0 left-0`}>
+          <div className="fixed w-[70%] bg-[#fff] h-screen top-0 left-0 z-10 overflow-y-scroll">
+            <div className="w-full justify-between flex pr-3">
+              <div>
+                <div
+                  className="relative mr-[15px]"
+                  onClick={() => setOpenWishlist(true) || setOpen(false)}
+                >
+                  <AiOutlineHeart size={30} className="mt-5 ml-3" />
+                  <span class="absolute right-0 top-0 rounded-full bg-[#3bc177] w-4 h-4 top right p-0 m-0 text-white font-mono text-[12px]  leading-tight text-center">
+                    1
+                  </span>
+                </div>
+              </div>
+              <AiOutlineClose
+                size={30}
+                className="ml-4 mt-5"
+                onClick={() => setOpen(false)}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 };
