@@ -13,14 +13,22 @@ const ActivationPage = () => {
       const activationEmail = async () => {
         try {
           console.log("Sending activation token:", { activation_token });
-          const res = await axios.post(`${server}/user/activation`, {
-            activation_token,
-          });
+          const res = await axios.post(
+            `${server}/user/activation`,
+            {
+              activation_token,
+            },
+            { headers: { "Content-Type": "application/json" } }
+          );
           console.log("Server response:", res.data.message);
           setSuccess(true);
         } catch (error) {
           console.error("Error response:", error.response); // Log the entire error response
-          setError(error.response ? error.response.data.message : "An unexpected error occurred.");
+          setError(
+            error.response
+              ? error.response.data.message
+              : "An unexpected error occurred."
+          );
         }
       };
       activationEmail();
@@ -37,10 +45,10 @@ const ActivationPage = () => {
         alignItems: "center",
       }}
     >
-      {error ? (
-        <p>{error}</p>
-      ) : success ? (
+      {!success ? (
         <p>Your account has been created successfully!</p>
+      ) : error ? (
+        <p>{error}</p>
       ) : (
         <p>Activating your account...</p>
       )}

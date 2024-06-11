@@ -1,19 +1,20 @@
+import { Button } from "@material-ui/core";
+import { DataGrid } from "@material-ui/data-grid";
 import React, { useState } from "react";
-import { backendUrl } from "../../server";
-import { useSelector } from "react-redux";
 import {
   AiOutlineArrowRight,
   AiOutlineCamera,
   AiOutlineDelete,
 } from "react-icons/ai";
-import styles from "../../styles/style";
-import { Link } from "react-router-dom";
-import { Button } from "@material-ui/core";
-import { DataGrid } from "@material-ui/data-grid";
 import { MdTrackChanges } from "react-icons/md";
+import { useSelector } from "react-redux";
+import { Link } from "react-router-dom";
+import { backendUrl } from "../../server";
+import styles from "../../styles/style";
 
 const ProfileContent = ({ active }) => {
   const { user } = useSelector((state) => state.user);
+  console.log("🚀 ~ ProfileContent ~ user:", user)
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
@@ -33,7 +34,7 @@ const ProfileContent = ({ active }) => {
           <div className="flex justify-center w-full">
             <div className="relative">
               <img
-                src={`${backendUrl}${user?.avatar}`}
+                src={`${backendUrl}/${user?.avatar}`}
                 className="w-[150px] h-[150px] rounded-full object-cover border-[3px] border-[#3ad132]"
                 alt="User Avatar"
               />
