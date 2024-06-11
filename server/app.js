@@ -26,9 +26,11 @@ if (process.env.NODE_ENV !== "production") {
 
 // Import routes
 const user = require("./controller/user");
+const shop = require("./controller/shop");
 
 // Mount routes
 app.use("/api/v2/user", user); // Mount user routes under /api/v2/user
+app.use("/api/v2/shop", shop); // Mount user routes under /api/v2/shop
 
 // Error handling middleware - should be placed at the end
 app.use(ErrorHandler);
