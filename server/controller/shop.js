@@ -6,12 +6,12 @@ const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const Shop = require("../model/shop.js");
 const { isSeller } = require("../middleware/auth");
-const {upload} = require("../multer");
+const { upload } = require("../multer");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/ErrorHandler");
-// const sendShopToken = require("../utils/shopToken");
+const sendShopToken = require("../utils/shopToken");
 
-// create shop
+// Create shop
 router.post("/create-shop", upload.single("file"), async (req, res, next) => {
   try {
     const { email } = req.body;
@@ -63,14 +63,14 @@ router.post("/create-shop", upload.single("file"), async (req, res, next) => {
   }
 });
 
-// create activation token
+// Create activation token
 const createActivationToken = (seller) => {
   return jwt.sign(seller, process.env.ACTIVATION_SECRET, {
-    expiresIn: ACTIVATION_EXPIRES,
+    expiresIn: process.env.ACTIVATION_EXPIRES,
   });
 };
 
-// activate user
+// Activate user
 router.post(
   "/activation",
   catchAsyncError(async (req, res, next) => {
@@ -93,6 +93,15 @@ router.post(
       if (seller) {
         return next(new ErrorHandler("User already exists", 400));
       }
+      // console.log(
+      //   name,
+      //   email,
+      //   avatar,
+      //   password,
+      //   zipCode,
+      //   address,
+      //   phoneNumber,
+      // );
 
       seller = await Shop.create({
         name,
@@ -111,7 +120,7 @@ router.post(
   })
 );
 
-// login shop
+// Login shop
 router.post(
   "/login-shop",
   catchAsyncError(async (req, res, next) => {
@@ -143,30 +152,27 @@ router.post(
   })
 );
 
-
-// load shop
-// router.get(
-//   "/getSeller",
-//   isSeller,
-//   catchAsyncError(async (req, res, next) => {
-//     try {
-//       const seller = await Shop.findById(req.seller._id);
-
-
-//       if (!seller) {
-//         return next(new ErrorHandler("User doesn't exists", 400));
-//       }
-
-//       res.status(200).json({
-//         success: true,
-//         seller,
-//       });
-//     } catch (error) {
-//       return next(new ErrorHandler(error.message, 500));
-//     }
-//   })
-// );
+// Load shop
+router.get(
+  "/getSeller",
+  isSeller,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const seller = await Shop.findById(req.seller._id);
 
 
+      if (!seller) {
+        return next(new ErrorHandler("User doesn't exists", 400));
+      }
+
+      res.status(200).json({
+        success: true,
+        seller,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
 
 module.exports = router;

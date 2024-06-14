@@ -10,6 +10,7 @@ const shopSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please enter shop email!"],
+    unique: true,
   },
   password: {
     type: String,
@@ -46,6 +47,11 @@ const shopSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,
+  status: {
+    type: String,
+    enum: ["inactive", "active"],
+    default: "inactive",
+  },
 });
 
 // Hash password

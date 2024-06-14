@@ -1,12 +1,12 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { Link } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
-import axios from "axios";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "../../styles/style";
 import { server } from "../../server";
+import styles from "../../styles/style"; // Ensure the path is correct for your project
 
 function SignUp() {
   const [email, setEmail] = useState("");
@@ -32,22 +32,35 @@ function SignUp() {
 
     const config = { headers: { "Content-Type": "multipart/form-data" } };
 
-    try {
-      const response = await axios.post(`${server}/user/create-user`, formData, config);
-      if (response && response.data) {
-        toast.success(response.data.message); // Using toast to display success message
+    axios
+      .post(`${server}/user/create-user`, formData, config)
+      .then((res) => {
+        toast.success(res.data.message);
         setName("");
         setEmail("");
         setPassword("");
-        setAvatar(null); // Reset avatar input
-      } else {
-        toast.error("Unexpected response from server.");
-      }
-    } catch (error) {
-      const errorMessage = error.response?.data?.message || "Something went wrong!";
-      setError(errorMessage);
-      toast.error(errorMessage);
-    }
+        setAvatar();
+      })
+      .catch((err) => {
+        toast.error(err.response.data.message);
+      });
+
+    // try {
+    //   const response = await axios.post(`${server}/user/create-user`, formData, config);
+    //   if (response && response.data) {
+    //     toast.success(response.data.message); // Using toast to display success message
+    //     setName("");
+    //     setEmail("");
+    //     setPassword("");
+    //     setAvatar(null); // Reset avatar input
+    //   } else {
+    //     toast.error("Unexpected response from server.");
+    //   }
+    // } catch (error) {
+    //   const errorMessage = error.response?.data?.message || "Something went wrong!";
+    //   setError(errorMessage);
+    //   toast.error(errorMessage);
+    // }
   };
 
   return (
