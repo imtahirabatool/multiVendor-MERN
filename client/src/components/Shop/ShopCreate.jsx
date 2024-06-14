@@ -264,7 +264,7 @@ const ShopCreate = () => {
             </div>
             <div className="flex items-center justify-center mt-4">
               <h4 className="mr-2">Already have an account?</h4>
-              <Link to="/create-shop" className="text-blue-600">
+              <Link to="/shop-login" className="text-blue-600">
                 Sign In
               </Link>
             </div>

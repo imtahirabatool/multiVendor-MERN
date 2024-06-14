@@ -17,26 +17,31 @@ import {
   ProfilePage,
   ShopCreatePage,
   SellerActivationPage,
+  ShopLoginPage,
 } from "./Routes.js";
 import { ToastContainer, Bounce } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 // import axios from "axios";
 // import { server } from "./server.js";
 import Store from "./redux/store.js";
-import { loadUser } from "./redux/actions/user.js";
+import { loadSeller, loadUser } from "./redux/actions/user.js";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./ProctedRoute.js";
+import {ShopHomePage} from "./ShopRoutes.js"
+import SellerProtectedRoute from "./SellerProtectedRoute.js"
 
 export default function App() {
   const { loading, isAuthenticated } = useSelector((state) => state.user);
+  const { isSeller, isLoading } = useSelector((state) => state.seller);
 
   useEffect(() => {
     Store.dispatch(loadUser());
+    Store.dispatch(loadSeller());
   }, []);
 
   return (
     <>
-      {loading ? null : (
+      {loading || isLoading ? null : (
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<HomePage />} />
@@ -73,7 +78,17 @@ export default function App() {
                 </ProtectedRoute>
               }
             />
+
+            {/* shop Routes */}
             <Route path="/shop-create" element={<ShopCreatePage />} />
+            <Route path="/shop-login" element={<ShopLoginPage />} />
+            <Route path="/shop/:id" element={
+              <SellerProtectedRoute
+              isSeller={isSeller}
+              >
+                <ShopHomePage />
+              </SellerProtectedRoute>
+            } />
           </Routes>
           <ToastContainer
             position="top-right"

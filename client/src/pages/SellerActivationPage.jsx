@@ -13,9 +13,13 @@ const SellerActivationPage = () => {
       const activationEmail = async () => {
         try {
           console.log("Sending activation token:", { activation_token });
-          const res = await axios.post(`${server}/shop/activation`, {
-            activation_token,
-          });
+          const res = await axios.post(
+            `${server}/shop/activation`,
+            {
+              activation_token,
+            },
+            { headers: { "Content-Type": "application/json" } }
+          );
           console.log("Server response:", res.data.message);
           setSuccess(true);
         } catch (error) {
@@ -29,7 +33,7 @@ const SellerActivationPage = () => {
       };
       activationEmail();
     }
-  }, [activation_token]);
+  }, []);
 
   return (
     <div
@@ -41,10 +45,10 @@ const SellerActivationPage = () => {
         alignItems: "center",
       }}
     >
-      {error ? (
-        <p>{error}</p>
-      ) : success ? (
+      {!success ? (
         <p>Your account has been created successfully!</p>
+      ) : error ? (
+        <p>{error}</p>
       ) : (
         <p>Activating your account...</p>
       )}

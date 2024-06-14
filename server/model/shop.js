@@ -10,6 +10,7 @@ const shopSchema = new mongoose.Schema({
   email: {
     type: String,
     required: [true, "Please enter shop email!"],
+    unique: true,
   },
   password: {
     type: String,
@@ -36,7 +37,7 @@ const shopSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  zipcode: {
+  zipCode: {
     type: Number,
     required: true,
   },
@@ -46,6 +47,11 @@ const shopSchema = new mongoose.Schema({
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,
+  status: {
+    type: String,
+    enum: ["inactive", "active"],
+    default: "inactive",
+  },
 });
 
 // Hash password
@@ -54,6 +60,7 @@ shopSchema.pre("save", async function (next) {
     next();
   }
 
+  console.log("Hashing password for:", this.email);
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
