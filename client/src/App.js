@@ -27,17 +27,19 @@ import Store from "./redux/store.js";
 import { loadSeller, loadUser } from "./redux/actions/user.js";
 import { useSelector } from "react-redux";
 import ProtectedRoute from "./ProctedRoute.js";
-import {ShopHomePage} from "./ShopRoutes.js"
-import SellerProtectedRoute from "./SellerProtectedRoute.js"
+import { ShopHomePage } from "./ShopRoutes.js";
+import SellerProtectedRoute from "./SellerProtectedRoute.js";
 
 export default function App() {
   const { loading, isAuthenticated } = useSelector((state) => state.user);
-  const { isSeller, isLoading } = useSelector((state) => state.seller);
+  const { isLoading, isSeller } = useSelector((state) => state.seller);
 
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
   }, []);
+
+  // console.log("isSeller:", isSeller);
 
   return (
     <>
@@ -82,13 +84,14 @@ export default function App() {
             {/* shop Routes */}
             <Route path="/shop-create" element={<ShopCreatePage />} />
             <Route path="/shop-login" element={<ShopLoginPage />} />
-            <Route path="/shop/:id" element={
-              <SellerProtectedRoute
-              isSeller={isSeller}
-              >
-                <ShopHomePage />
-              </SellerProtectedRoute>
-            } />
+            <Route
+              path="/shop/:id"
+              element={
+                <SellerProtectedRoute isSeller={isSeller}>
+                  <ShopHomePage />
+                </SellerProtectedRoute>
+              }
+            />
           </Routes>
           <ToastContainer
             position="top-right"
