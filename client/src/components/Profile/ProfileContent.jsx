@@ -14,13 +14,18 @@ import styles from "../../styles/style";
 
 const ProfileContent = ({ active }) => {
   const { user } = useSelector((state) => state.user);
-  console.log("🚀 ~ ProfileContent ~ user:", user)
+  console.log("🚀 ~ ProfileContent ~ user:", user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
   const [zipCode, setZipCode] = useState(user?.zipCode || "");
   const [address1, setAddress1] = useState(user?.address1 || "");
   const [address2, setAddress2] = useState(user?.address2 || "");
+
+  // useEffect(() => {
+  //   console.log("User avatar path:", user?.avatar);
+  //   console.log("Constructed URL:", `${backendUrl}/${user?.avatar}`);
+  // }, [user]);
 
   const handleSubmit = (e) => {
     e.preventDefault();

@@ -1,5 +1,4 @@
-import ShopDashboardPage from "../pages/Shop/ShopDashboardPage"
+import ShopDashboardPage from "../pages/Shop/ShopDashboardPage";
+import ShopCreateProduct from "../pages/Shop/ShopCreateProduct";
 
-export{
-    ShopDashboardPage,
-}
+export { ShopDashboardPage, ShopCreateProduct };
