@@ -1,13 +1,16 @@
-import React, { useState } from "react";
-// import { useDispatch, useSelector } from "react-redux";
-// import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
+import { createProduct } from "../../redux/actions/product";
+import { toast } from "react-toastify";
 
 const CreateProduct = () => {
-  // const { seller } = useSelector((state) => state.seller);
-  // const navigate = useNavigate();
-  // const dispatch = useDispatch();
+  const { seller } = useSelector((state) => state.seller);
+  const { success, error } = useSelector((state) => state.products);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [images, setImages] = useState([]);
   const [name, setName] = useState("");
@@ -15,12 +18,39 @@ const CreateProduct = () => {
   const [category, setCategory] = useState("");
   const [tags, setTags] = useState("");
   const [originalPrice, setOriginalPrice] = useState();
-  const [discount, setDiscount] = useState();
+  const [discountPrice, setDiscountPrice] = useState();
   const [stock, setStock] = useState();
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error);
+    }
+    if (success && window.location.pathname !== '/create-product') {
+      toast.success("Product created successfully!");
+      navigate("/dashboard");
+      window.location.reload();
+    }
+  }, [navigate, error, success]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const newForm = new FormData();
+
+    images.forEach((image) => {
+      newForm.append("images", image);
+    });
+    newForm.append("name", name);
+    newForm.append("description", description);
+    newForm.append("category", category);
+    newForm.append("tags", tags);
+    newForm.append("originalPrice", originalPrice);
+    newForm.append("discountPrice", discountPrice);
+    newForm.append("stock", stock);
+    newForm.append("shopId", seller._id);
+    dispatch(createProduct(newForm));
   };
+
   const handleImageChange = (e) => {
     e.preventDefault();
 
@@ -51,11 +81,14 @@ const CreateProduct = () => {
           <label className="pb-2">
             Description <span className="text-red-500">*</span>
           </label>
-          <input
+          <textarea
+            rows="8"
+            cols="50"
+            required
             type="text"
             name="description"
             value={description}
-            className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            className="mt-2 appearance-none block w-full pt-3 px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             onChange={(e) => setDescription(e.target.value)}
             placeholder="Enter your product description..."
           />
@@ -110,9 +143,9 @@ const CreateProduct = () => {
           <input
             type="number"
             name="price"
-            value={discount}
+            value={discountPrice}
             className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-            onChange={(e) => setDiscount(e.target.value)}
+            onChange={(e) => setDiscountPrice(e.target.value)}
             placeholder="Enter your product discount price..."
           />
         </div>
@@ -147,15 +180,16 @@ const CreateProduct = () => {
               <AiOutlinePlusCircle size={30} className="mt-3" color="#555" />
             </label>
             {images &&
-              images.map((i) => (
+              images.map((image, index) => (
                 <img
-                  src={URL.createObjectURL(i)}
-                  key={i}
+                  src={URL.createObjectURL(image)}
+                  key={index} 
                   alt="product images"
                   className="h-[120px] w-[120px] object-cover m-2"
                 />
               ))}
           </div>
+
           <br />
           <div>
             <input
