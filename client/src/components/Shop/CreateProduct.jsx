@@ -1,13 +1,13 @@
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+// import { useDispatch, useSelector } from "react-redux";
+// import { useNavigate } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 
 const CreateProduct = () => {
-  const { seller } = useSelector((state) => state.seller);
-  const navigate = useNavigate();
-  const dispatch = useDispatch();
+  // const { seller } = useSelector((state) => state.seller);
+  // const navigate = useNavigate();
+  // const dispatch = useDispatch();
 
   const [images, setImages] = useState([]);
   const [name, setName] = useState("");
@@ -157,7 +157,13 @@ const CreateProduct = () => {
               ))}
           </div>
           <br />
-          <div className=""></div>
+          <div>
+            <input
+              type="submit"
+              value="Create"
+              className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+            />
+          </div>
         </div>
       </form>
     </div>
