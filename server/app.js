@@ -6,16 +6,16 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 // Middleware
-app.use(express.json()); // Use express.json() for parsing JSON bodies
-app.use(bodyParser.urlencoded({ extended: true })); // bodyParser for handling URL-encoded bodies
-app.use(cookieParser()); // Cookie parser middleware
+app.use(express.json()); 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cookieParser()); 
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow requests from localhost:3000
-    credentials: true, // Allow credentials (cookies, authorization headers)
+    origin: "http://localhost:3000", 
+    credentials: true, 
   })
 );
-app.use("/", express.static("uploads")); // Serve static files from the "uploads" directory
+app.use("/", express.static("uploads"));
 
 // Config
 if (process.env.NODE_ENV !== "production") {
@@ -27,12 +27,14 @@ if (process.env.NODE_ENV !== "production") {
 // Import routes
 const user = require("./controller/user");
 const shop = require("./controller/shop");
+const product = require("./controller/product");
 
 // Mount routes
-app.use("/api/v2/user", user); // Mount user routes under /api/v2/user
-app.use("/api/v2/shop", shop); // Mount user routes under /api/v2/shop
+app.use("/api/v2/user", user); 
+app.use("/api/v2/shop", shop); 
+app.use("/api/v2/product", product); 
 
-// Error handling middleware - should be placed at the end
+// Error handling middleware
 app.use(ErrorHandler);
 
 module.exports = app;
