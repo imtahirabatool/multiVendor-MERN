@@ -24,16 +24,18 @@ export const createProduct = (newForm) => async (dispatch) => {
 // get All Products of a shop
 export const getAllProductsShop = (id) => async (dispatch) => {
   try {
-    // console.log("Dispatching getAllProductsShopRequest");
+    console.log("Dispatching getAllProductsShopRequest");
     dispatch({ type: "getAllproductsShopRequest" });
 
-    const { data } = await axios.get(
+    const response = await axios.get(
       `${server}/product/get-all-products-shop/${id}`
     );
-    // console.log("Fetched products data:", data); // Detailed logging
-    
+    console.log("Fetched products response:", response); // Log the entire response
 
-    dispatch({ type: "getAllProductsShopSuccess", payload: data.products });
+    const { data } = response;
+    console.log("Fetched products data:", data); // Log the data
+
+    dispatch({ type: "getAllProductsShopSuccess", payload: data.product }); // Ensure 'product' key is used
   } catch (error) {
     console.error(
       "Failed to fetch products:",

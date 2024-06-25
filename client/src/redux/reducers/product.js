@@ -2,7 +2,7 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: true,
-  products: [], // Ensure products is initialized as an empty array
+  products: [],
   error: null,
 };
 
@@ -28,9 +28,9 @@ export const productReducer = createReducer(initialState, (builder) => {
     .addCase("getAllproductsShopRequest", (state) => {
       console.log("Reducer: Handling getAllProductsShopRequest");
       state.isLoading = true;
-      state.error = null; // Reset error on new request
+      state.error = null;
     })
-    .addCase("getAllproductsShopSuccess", (state, action) => {
+    .addCase("getAllProductsShopSuccess", (state, action) => {
       console.log(
         "Reducer: Handling getAllProductsShopSuccess, payload:",
         action.payload
@@ -38,7 +38,7 @@ export const productReducer = createReducer(initialState, (builder) => {
       state.isLoading = false;
       state.products = action.payload;
     })
-    .addCase("getAllproductsShopFailed", (state, action) => {
+    .addCase("getAllProductsShopFailed", (state, action) => {
       console.log(
         "Reducer: Handling getAllProductsShopFailed, error:",
         action.payload
