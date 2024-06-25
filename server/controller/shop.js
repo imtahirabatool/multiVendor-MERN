@@ -5,7 +5,7 @@ const fs = require("fs");
 const jwt = require("jsonwebtoken");
 const sendMail = require("../utils/sendMail");
 const Shop = require("../model/shop.js");
-const { isSeller } = require("../middleware/auth");
+const { isSeller, isAuthenticated } = require("../middleware/auth");
 const { upload } = require("../multer");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const ErrorHandler = require("../utils/ErrorHandler");
@@ -184,6 +184,27 @@ router.get(
       });
     } catch (error) {
       console.error("Error fetching seller:", error);
+      return next(new ErrorHandler(error.message, 500));
+    }
+  })
+);
+
+// Log out from Shop
+router.get(
+  "/logout",
+  isAuthenticated,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      res.cookie("seller_token", null, {
+        expires: new Date(Date.now()),
+        httpOnly: true,
+      });
+
+      res.status(201).json({
+        success: true,
+        message: "Log out successful!",
+      });
+    } catch (error) {
       return next(new ErrorHandler(error.message, 500));
     }
   })

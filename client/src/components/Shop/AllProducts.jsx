@@ -119,7 +119,7 @@ const AllProducts = () => {
         id: item._id,
         name: item.name,
         price: "USD " + item.discountPrice,
-        stock: item.stock,
+        Stock: item.stock,
         sold: 10,
       });
     });
