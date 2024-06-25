@@ -1,4 +1,5 @@
 const express = require("express");
+const { isSeller, isAuthenticated } = require("../middleware/auth");
 const catchAsyncError = require("../middleware/catchAsyncError");
 const router = express.Router();
 const Product = require("../model/product");
@@ -46,6 +47,28 @@ router.get(
       res.status(201).json({
         success: true,
         product,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
+//delete product of Shop
+router.delete(
+  "/delete-shop-product/:id",
+  isSeller,
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const productId = req.params.id;
+      const product = await Product.findByIdAndDelete(productId);
+
+      if (!product) {
+        return next(new ErrorHandler("Product not found with this id!", 500));
+      }
+      re.status(201).json({
+        success: true,
+        message:"Product deleted successfully!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));

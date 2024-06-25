@@ -26,27 +26,39 @@ export const productReducer = createReducer(initialState, (builder) => {
     })
     // get all shop products
     .addCase("getAllproductsShopRequest", (state) => {
-      console.log("Reducer: Handling getAllProductsShopRequest");
+      // console.log("Reducer: Handling getAllProductsShopRequest");
       state.isLoading = true;
       state.error = null;
     })
     .addCase("getAllProductsShopSuccess", (state, action) => {
-      console.log(
-        "Reducer: Handling getAllProductsShopSuccess, payload:",
-        action.payload
-      );
+      // console.log(
+      //   "Reducer: Handling getAllProductsShopSuccess, payload:",
+      //   action.payload
+      // );
       state.isLoading = false;
       state.products = action.payload;
     })
     .addCase("getAllProductsShopFailed", (state, action) => {
-      console.log(
-        "Reducer: Handling getAllProductsShopFailed, error:",
-        action.payload
-      );
+      // console.log(
+      //   "Reducer: Handling getAllProductsShopFailed, error:",
+      //   action.payload
+      // );
       state.isLoading = false;
       state.error = action.payload;
     })
     .addCase("clearError", (state) => {
       state.error = null;
+    })
+    // delete product of shop
+    .addCase("deleteProductRequest", (state) => {
+      state.isLoading = true;
+    })
+    .addCase("deleteProductSuccess", (state, action) => {
+      state.isLoading = false;
+      state.message = action.payload;
+    })
+    .addCase("deleteProductFailed", (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
     });
 });
