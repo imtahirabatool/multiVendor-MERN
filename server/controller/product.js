@@ -53,22 +53,39 @@ router.get(
     }
   })
 );
-
-//delete product of Shop
+// Delete product of shop
 router.delete(
   "/delete-shop-product/:id",
   isSeller,
   catchAsyncError(async (req, res, next) => {
     try {
       const productId = req.params.id;
+      const productData = await Product.findById(productId);
+
+      if (!productData) {
+        return next(new ErrorHandler("Product not found with this id!", 500));
+      }
+
+      productData.images.forEach((imageUrls) => {
+        const filename = imageUrls;
+        const filePath = `uploads/${filename}`;
+
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      });
+
       const product = await Product.findByIdAndDelete(productId);
 
       if (!product) {
         return next(new ErrorHandler("Product not found with this id!", 500));
       }
-      re.status(201).json({
+
+      res.status(201).json({
         success: true,
-        message:"Product deleted successfully!",
+        message: "Product deleted successfully!",
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));

@@ -6,6 +6,7 @@ const { upload } = require("../multer");
 const Event = require("../model/event");
 const ErrorHandler = require("../utils/ErrorHandler");
 const { isSeller } = require("../middleware/auth");
+const fs = require("fs");
 
 // Create event
 router.post(
@@ -24,11 +25,11 @@ router.post(
         eventData.images = imageUrls;
         eventData.shop = shop;
 
-        const product = await Event.create(eventData);
+        const event = await Event.create(eventData);
 
         res.status(201).json({
           success: true,
-          product,
+          event,
         });
       }
     } catch (error) {
@@ -46,7 +47,7 @@ router.get(
 
       res.status(201).json({
         success: true,
-        events, // Corrected from 'product' to 'events'
+        events,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));
@@ -61,11 +62,29 @@ router.delete(
   catchAsyncError(async (req, res, next) => {
     try {
       const eventId = req.params.id;
+      const eventData = await Event.findById(eventId);
+
+      if (!eventData) {
+        return next(new ErrorHandler("Event not found with this id!", 500));
+      }
+
+      eventData.images.forEach((imageUrls) => {
+        const filename = imageUrls;
+        const filePath = `uploads/${filename}`;
+
+        fs.unlink(filePath, (err) => {
+          if (err) {
+            console.log(err);
+          }
+        });
+      });
+
       const event = await Event.findByIdAndDelete(eventId);
 
       if (!event) {
         return next(new ErrorHandler("Event not found with this id!", 500));
       }
+
       res.status(201).json({
         success: true,
         message: "Event deleted successfully!",
