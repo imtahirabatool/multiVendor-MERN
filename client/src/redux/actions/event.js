@@ -21,18 +21,16 @@ export const createEvent = (newForm) => async (dispatch) => {
   }
 };
 
-// get All events of a shop
+// Get all events of a shop
 export const getAllEventsShop = (id) => async (dispatch) => {
   try {
     dispatch({ type: "getAllEventsShopRequest" });
 
-    const response = await axios.get(
-      `${server}/event/get-all-events-shop/${id}`
-    );
+    const response = await axios.get(`${server}/event/get-all-events/${id}`);
 
     const { data } = response;
 
-    dispatch({ type: "getAllEventsShopSuccess", payload: data.event });
+    dispatch({ type: "getAllEventsShopSuccess", payload: data.events }); // Ensure the payload matches the response key
   } catch (error) {
     console.error(
       "Failed to fetch events:",
@@ -45,11 +43,11 @@ export const getAllEventsShop = (id) => async (dispatch) => {
   }
 };
 
-//delete event of shop
-export const deleteevent = (id) => async (dispatch) => {
+// Delete event of shop
+export const deleteEvent = (id) => async (dispatch) => {
   try {
     dispatch({
-      type: "deleteeventRequest",
+      type: "deleteEventRequest",
     });
 
     const config = { withCredentials: true };
@@ -60,12 +58,12 @@ export const deleteevent = (id) => async (dispatch) => {
     );
 
     dispatch({
-      type: "deleteeventSuccess",
+      type: "deleteEventSuccess",
       payload: data.message,
     });
   } catch (error) {
     dispatch({
-      type: "deleteeventFailed",
+      type: "deleteEventFailed",
       payload: error.response?.data?.message || error.message,
     });
   }

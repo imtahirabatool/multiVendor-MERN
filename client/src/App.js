@@ -33,6 +33,7 @@ import {
   ShopCreateProduct,
   ShopAllProducts,
   ShopCreateEvent,
+  ShopAllEvents,
 } from "./routes/ShopRoutes.js";
 
 export default function App() {
@@ -122,6 +123,14 @@ export default function App() {
             element={
               <SellerProtectedRoute>
                 <ShopCreateEvent />
+              </SellerProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard-events"
+            element={
+              <SellerProtectedRoute>
+                <ShopAllEvents />
               </SellerProtectedRoute>
             }
           />
