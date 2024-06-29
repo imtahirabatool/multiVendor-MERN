@@ -24,6 +24,7 @@ export const productReducer = createReducer(initialState, (builder) => {
     .addCase("clearErrors", (state) => {
       state.error = null;
     })
+
     // get all shop products
     .addCase("getAllproductsShopRequest", (state) => {
       // console.log("Reducer: Handling getAllProductsShopRequest");
@@ -36,7 +37,7 @@ export const productReducer = createReducer(initialState, (builder) => {
       //   action.payload
       // );
       state.isLoading = false;
-      state.products = action.payload;
+      state.allProducts = action.payload;
     })
     .addCase("getAllProductsShopFailed", (state, action) => {
       // console.log(

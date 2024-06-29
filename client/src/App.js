@@ -35,12 +35,17 @@ import {
   ShopCreateEvent,
   ShopAllEvents,
   ShopAllCoupons,
+  ShopPreviewPage,
 } from "./routes/ShopRoutes.js";
+import { getAllProductsShop } from "./redux/actions/product.js";
+import { getAllEvents } from "./redux/actions/event.js";
 
 export default function App() {
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
+    Store.dispatch(getAllProductsShop);
+    Store.dispatch(getAllEvents);
   }, []);
 
   // console.log("isSeller:", isSeller);
@@ -83,7 +88,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-
+          <Route path="/shop/preview/:id" element={<ShopPreviewPage />} />
           {/* shop Routes */}
           <Route path="/shop-create" element={<ShopCreatePage />} />
           <Route path="/shop-login" element={<ShopLoginPage />} />

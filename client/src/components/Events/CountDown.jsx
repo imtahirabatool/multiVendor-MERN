@@ -1,18 +1,30 @@
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import { server } from "../../server";
 
-const CountDown = () => {
+const CountDown = ({ data }) => {
   const [timeLeft, setTimeLeft] = useState(calculateTimeLeft());
 
   useEffect(() => {
-    const timer = setInterval(() => {
+    const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
-    return () => clearInterval(timer);
-  }, []);
+
+    if (
+      typeof timeLeft.days === "undefined" &&
+      typeof timeLeft.hours === "undefined" &&
+      typeof timeLeft.minutes === "undefined" &&
+      typeof timeLeft.seconds === "undefined"
+    ) {
+      axios.delete(`${server}/event/delete-shop-event/${data._id}`);
+    }
+    return () => clearTimeout(timer);
+  });
 
   function calculateTimeLeft() {
-    const difference = +new Date("2024-6-27") - new Date();
+    const difference = +new Date(data.Finish_Date) - +new Date();
     let timeLeft = {};
+
     if (difference > 0) {
       timeLeft = {
         days: Math.floor(difference / (1000 * 60 * 60 * 24)),
@@ -21,6 +33,7 @@ const CountDown = () => {
         seconds: Math.floor((difference / 1000) % 60),
       };
     }
+
     return timeLeft;
   }
 
@@ -28,8 +41,9 @@ const CountDown = () => {
     if (!timeLeft[interval]) {
       return null;
     }
+
     return (
-      <span key={interval} className="text-[25px] text-[#475ad2]">
+      <span className="text-[25px] text-[#475ad2]">
         {timeLeft[interval]} {interval}{" "}
       </span>
     );
@@ -40,7 +54,7 @@ const CountDown = () => {
       {timerComponents.length ? (
         timerComponents
       ) : (
-        <span className="text-[red] text-[25px]">Time's Up!</span>
+        <span className="text-[red] text-[25px]">Time's Up</span>
       )}
     </div>
   );

@@ -1,25 +1,36 @@
 import React, { useEffect, useState } from "react";
-import Header from "../components/Layout/Header";
+import { useParams, useSearchParams } from "react-router-dom";
 import Footer from "../components/Layout/Footer";
-import ProductsDetail from "../components/Products/ProductsDetail";
-import { useParams } from "react-router-dom";
-import { productData } from "../static/data";
+import Header from "../components/Layout/Header";
 import SuggestProduct from "../components/Products/SuggestProduct";
+import ProductsDetail from "../components/Products/ProductsDetail";
+import { useSelector } from "react-redux";
 
 const ProductDetailsPage = () => {
-  const { name } = useParams();
+  const { allProducts } = useSelector((state) => state.products);
+  const { allEvents } = useSelector((state) => state.events);
+  const { id } = useParams();
   const [data, setData] = useState(null);
-  const productName = name.replace(/-/g, " ");
+  const [searchParams] = useSearchParams();
+  const eventData = searchParams.get("isEvent");
 
   useEffect(() => {
-    const data = productData.find((i) => i.name === productName);
-    setData(data);
-  }, [productName]);
+    if (eventData !== null) {
+      const event = allEvents && allEvents.find((i) => i._id === id);
+      setData(event);
+    } else {
+      const product = allProducts && allProducts.find((i) => i._id === id);
+      setData(product);
+    }
+  }, [allProducts, allEvents, eventData, id]);
+
   return (
     <div>
       <Header />
+      <br />
       <ProductsDetail data={data} />
-      {data && <SuggestProduct data={data} />}
+      {!eventData && <>{data && <SuggestProduct data={data} />}</>}
+      <br />
       <Footer />
     </div>
   );

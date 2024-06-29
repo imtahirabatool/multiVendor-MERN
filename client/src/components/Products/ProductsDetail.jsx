@@ -1,27 +1,46 @@
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import styles from "../../styles/style";
+import React, { useEffect, useState } from "react";
 import {
   AiFillHeart,
   AiOutlineHeart,
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useNavigate } from "react-router-dom";
+import { getAllProductsShop } from "../../redux/actions/product";
+import { server } from "../../server";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../redux/actions/wishlist";
+import { addTocart } from "../../redux/actions/cart";
+import { toast } from "react-toastify";
+import Ratings from "./Ratings";
+import axios from "axios";
+import styles from "../../styles/style";
 
-const ProductsDetail = ({ data }) => {
+const ProductDetails = ({ data }) => {
+  const { wishlist } = useSelector((state) => state.wishlist);
+  const { cart } = useSelector((state) => state.cart);
+  const { user, isAuthenticated } = useSelector((state) => state.user);
+  const { products } = useSelector((state) => state.products);
   const [count, setCount] = useState(1);
-  // const [click, setClick] = useState(false);
+  const [click, setClick] = useState(false);
   const [select, setSelect] = useState(0);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const [isWishlist, setIsWishlist] = useState(false);
+  useEffect(() => {
+    dispatch(getAllProductsShop(data && data?.shop._id));
+    if (wishlist && wishlist.find((i) => i._id === data?._id)) {
+      setClick(true);
+    } else {
+      setClick(false);
+    }
+  }, [data, wishlist, dispatch]);
 
-  const handleToggleWishlist = () => {
-    setIsWishlist(!isWishlist);
-  };
-
-  const handleMessageSubmit = () => {
-    navigate("/inbox?conversation=uryeufhnseuiywe89rfhenifu");
+  const incrementCount = () => {
+    setCount(count + 1);
   };
 
   const decrementCount = () => {
@@ -29,42 +48,105 @@ const ProductsDetail = ({ data }) => {
       setCount(count - 1);
     }
   };
-  const increamentCount = () => {
-    setCount(count + 1);
+
+  const removeFromWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(removeFromWishlist(data));
+  };
+
+  const addToWishlistHandler = (data) => {
+    setClick(!click);
+    dispatch(addToWishlist(data));
+  };
+
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i._id === id);
+    if (isItemExists) {
+      toast.error("Item already in cart!");
+    } else {
+      if (data.stock < 1) {
+        toast.error("Product stock limited!");
+      } else {
+        const cartData = { ...data, qty: count };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
+  };
+
+  // const totalReviewsLength =
+  //   products &&
+  //   products.reduce((acc, product) => acc + product.reviews.length, 0);
+
+  // const totalRatings =
+  //   products &&
+  //   products.reduce(
+  //     (acc, product) =>
+  //       acc + product.reviews.reduce((sum, review) => sum + review.rating, 0),
+  //     0
+  //   );
+
+  // const avg =  totalRatings / totalReviewsLength || 0;
+
+  // const averageRating = avg.toFixed(2);
+
+  const handleMessageSubmit = async () => {
+    if (isAuthenticated) {
+      const groupTitle = data._id + user._id;
+      const userId = user._id;
+      const sellerId = data.shop._id;
+      await axios
+        .post(`${server}/conversation/create-new-conversation`, {
+          groupTitle,
+          userId,
+          sellerId,
+        })
+        .then((res) => {
+          navigate(`/inbox?${res.data.conversation._id}`);
+        })
+        .catch((error) => {
+          toast.error(error.response.data.message);
+        });
+    } else {
+      toast.error("Please login to create a conversation");
+    }
   };
 
   return (
     <div className="bg-white">
       {data ? (
-        <div className={`${styles.section} w-[90%] 800px:w-[80%] min-h-screen`}>
-          <div className="w-full py-5 ">
+        <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
+          <div className="w-full py-5">
             <div className="block w-full 800px:flex">
-              <div className="w-full 800px:w-[50%] flex flex-col items-center">
+              <div className="w-full 800px:w-[50%]">
                 <img
-                  src={data.imageUrl[select].url}
+                  src={`${data && data.images[select]?.url}`}
                   alt=""
-                  className="w-[80%] mb-4"
+                  className="w-[80%]"
                 />
-                <div className="flex w-full">
-                  <div className={`${select === 0 ? "border" : ""} cursor-pointer`}>
-                    <img
-                      src={data?.imageUrl[0].url}
-                      alt=""
-                      className="h-[200px]"
-                      onClick={() => setSelect(0)}
-                    />
-                  </div>
-                  <div className={`${select === 1 ? "border" : ""} cursor-pointer`}>
-                    <img
-                      src={data?.imageUrl[1].url}
-                      alt=""
-                      className="h-[200px]"
-                      onClick={() => setSelect(1)}
-                    />
-                  </div>
+                <div className="w-full flex">
+                  {data &&
+                    data.images.map((i, index) => (
+                      <div
+                        className={`${
+                          select === 0 ? "border" : "null"
+                        } cursor-pointer`}
+                      >
+                        <img
+                          src={`${i?.url}`}
+                          alt=""
+                          className="h-[200px] overflow-hidden mr-3 mt-3"
+                          onClick={() => setSelect(index)}
+                        />
+                      </div>
+                    ))}
+                  <div
+                    className={`${
+                      select === 1 ? "border" : "null"
+                    } cursor-pointer`}
+                  ></div>
                 </div>
               </div>
-  
               <div className="w-full 800px:w-[50%] pt-5">
                 <h1 className={`${styles.productTitle}`}>{data.name}</h1>
                 <p>{data.description}</p>
@@ -73,12 +155,12 @@ const ProductsDetail = ({ data }) => {
                     {data.discountPrice}$
                   </h4>
                   <h3 className={`${styles.price}`}>
-                    {data.price ? data.price + "$" : null}
+                    {data.originalPrice ? data.originalPrice + "$" : null}
                   </h3>
                 </div>
-  
+
                 <div className="flex items-center mt-12 justify-between pr-3">
-                  <div className="">
+                  <div>
                     <button
                       className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
                       onClick={decrementCount}
@@ -90,54 +172,57 @@ const ProductsDetail = ({ data }) => {
                     </span>
                     <button
                       className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={increamentCount}
+                      onClick={incrementCount}
                     >
                       +
                     </button>
                   </div>
-                  <div className="">
-                    {isWishlist ? (
+                  <div>
+                    {click ? (
                       <AiFillHeart
                         size={30}
                         className="cursor-pointer"
-                        onClick={handleToggleWishlist}
-                        color="red"
-                        title="Remove from Wishlist"
+                        onClick={() => removeFromWishlistHandler(data)}
+                        color={click ? "red" : "#333"}
+                        title="Remove from wishlist"
                       />
                     ) : (
                       <AiOutlineHeart
                         size={30}
                         className="cursor-pointer"
-                        onClick={handleToggleWishlist}
-                        color="#333"
-                        title="Add to Wishlist"
+                        onClick={() => addToWishlistHandler(data)}
+                        color={click ? "red" : "#333"}
+                        title="Add to wishlist"
                       />
                     )}
                   </div>
                 </div>
                 <div
                   className={`${styles.button} !mt-6 !rounded !h-11 flex items-center`}
+                  onClick={() => addToCartHandler(data._id)}
                 >
                   <span className="text-white flex items-center">
                     Add to cart <AiOutlineShoppingCart className="ml-1" />
                   </span>
                 </div>
                 <div className="flex items-center pt-8">
-                  <img
-                    src={data.shop.shopAvatar.url}
-                    alt=""
-                    className="w-[50px] h-[50px] rounded-full mr-2"
-                  />
-                  <div className="flex flex-col">
-                    <h3 className={`${styles.shop_name} pb-1 pt-1`}>
-                      {data.shop.name}
-                    </h3>
-                    <h5 className="pb-3 text-[15px]">
-                      ({data.shop.ratings}) Ratings
-                    </h5>
+                  <Link to={`/shop/preview/${data?.shop._id}`}>
+                    <img
+                      src={`${data?.shop?.avatar?.url}`}
+                      alt=""
+                      className="w-[50px] h-[50px] rounded-full mr-2"
+                    />
+                  </Link>
+                  <div className="pr-8">
+                    <Link to={`/shop/preview/${data?.shop._id}`}>
+                      <h3 className={`${styles.shop_name} pb-1 pt-1`}>
+                        {data.shop.name}
+                      </h3>
+                    </Link>
+                    <h5 className="pb-3 text-[15px]">(4/5) Ratings</h5>
                   </div>
                   <div
-                    className={`${styles.button} bg-[#6443d1] !ml-[50px] !rounded !h-11`}
+                    className={`${styles.button} bg-[#6443d1] mt-4 !rounded !h-11`}
                     onClick={handleMessageSubmit}
                   >
                     <span className="text-white flex items-center">
@@ -148,25 +233,36 @@ const ProductsDetail = ({ data }) => {
               </div>
             </div>
           </div>
-          <ProductDetailsInfo data={data} />
+          <ProductDetailsInfo
+            data={data}
+            products={products}
+            // totalReviewsLength={totalReviewsLength}
+            // averageRating={averageRating}
+          />
           <br />
           <br />
         </div>
       ) : null}
     </div>
   );
-  
 };
 
-const ProductDetailsInfo = ({ data }) => {
+const ProductDetailsInfo = ({
+  data,
+  products,
+  // totalReviewsLength,
+  // averageRating,
+}) => {
   const [active, setActive] = useState(1);
 
   return (
-    <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded ">
+    <div className="bg-[#f5f6fb] px-3 800px:px-10 py-2 rounded">
       <div className="w-full flex justify-between border-b pt-10 pb-2">
         <div className="relative">
           <h5
-            className="text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+            className={
+              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+            }
             onClick={() => setActive(1)}
           >
             Product Details
@@ -177,7 +273,9 @@ const ProductDetailsInfo = ({ data }) => {
         </div>
         <div className="relative">
           <h5
-            className="text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+            className={
+              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+            }
             onClick={() => setActive(2)}
           >
             Product Reviews
@@ -188,7 +286,9 @@ const ProductDetailsInfo = ({ data }) => {
         </div>
         <div className="relative">
           <h5
-            className="text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+            className={
+              "text-[#000] text-[18px] px-1 leading-5 font-[600] cursor-pointer 800px:text-[20px]"
+            }
             onClick={() => setActive(3)}
           >
             Seller Information
@@ -200,79 +300,82 @@ const ProductDetailsInfo = ({ data }) => {
       </div>
       {active === 1 ? (
         <>
-          <p className="py-2 text-[18px] leading-8 pb-1 whitespace-pre-line">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur
-            perspiciatis necessitatibus quod numquam, consequatur esse sit id
-            autem perferendis, reprehenderit rerum eum magnam rem laudantium
-            eveniet tempore maxime cumque quis. At quae numquam reprehenderit
-            alias, quia iusto debitis! Ullam corporis recusandae modi eos
-            repellendus temporibus, voluptatum voluptatibus ipsa mollitia earum?
-            Porro error doloribus consequatur dolores. Nam obcaecati vero
-            nesciunt perferendis. Eaque unde impedit modi?
-          </p>
-          <br />
-          <p className="py-2 text-[18px] leading-8 pb-1 whitespace-pre-line">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur
-            perspiciatis necessitatibus quod numquam, consequatur esse sit id
-            autem perferendis, reprehenderit rerum eum magnam rem laudantium
-            eveniet tempore maxime cumque quis. At quae numquam reprehenderit
-            alias, quia iusto debitis! Ullam corporis recusandae modi eos
-            repellendus temporibus, voluptatum
-          </p>
-          <br />
-          <p className="py-2 text-[18px] leading-8 pb-1 whitespace-pre-line">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aspernatur
-            perspiciatis necessitatibus quod numquam, consequatur esse sit id
-            autem perferendis, reprehenderit rerum eum magnam rem laudantium
-            eveniet tempore maxime Ullam corporis recusandae modi eos
-            repellendus temporibus, voluptatum voluptatibus ipsa mollitia earum?
-            Porro error doloribus consequatur dolores. Nam obcaecati vero
-            nesciunt perferendis. Eaque unde impedit modi?
+          <p className="py-2 text-[18px] leading-8 pb-10 whitespace-pre-line">
+            {data.description}
           </p>
         </>
       ) : null}
+
       {active === 2 ? (
-        <div className="w-full justify-center min-h-[40vh] flex items-center">
-          <p>No Reviews yet</p>
+        <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
+          {data &&
+            data.reviews.map((item, index) => (
+              <div className="w-full flex my-2">
+                <img
+                  src={`${item.user.avatar?.url}`}
+                  alt=""
+                  className="w-[50px] h-[50px] rounded-full"
+                />
+                <div className="pl-2 ">
+                  <div className="w-full flex items-center">
+                    <h1 className="font-[500] mr-3">{item.user.name}</h1>
+                    <Ratings rating={data?.ratings} />
+                  </div>
+                  <p>{item.comment}</p>
+                </div>
+              </div>
+            ))}
+
+          <div className="w-full flex justify-center">
+            {data && data.reviews.length === 0 && (
+              <h5>No Reviews have for this product!</h5>
+            )}
+          </div>
         </div>
       ) : null}
+
       {active === 3 && (
-        <div className="w-full block 800pc:flex p-5">
+        <div className="w-full block 800px:flex p-5">
           <div className="w-full 800px:w-[50%]">
-            <div className="flex items-center">
-              <img
-                src={data.shop.shopAvatar.url}
-                alt=""
-                className="w-[50px] h-[50px] rounded-full"
-              />
-              <div className="pl-3">
-                <h3 className={`${styles.shop_name} `}>{data.shop.name}</h3>
-                <h5 className="pb-2 text text-[15px]">
-                  ({data.shop.ratings}) Ratings
-                </h5>
+            <Link to={`/shop/preview/${data.shop._id}`}>
+              <div className="flex items-center">
+                <img
+                  src={`${data?.shop?.avatar?.url}`}
+                  className="w-[50px] h-[50px] rounded-full"
+                  alt=""
+                />
+                <div className="pl-3">
+                  <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
+                  <h5 className="pb-2 text-[15px]">
+                    (4/5) Ratings
+                  </h5>
+                </div>
               </div>
-            </div>
-            <p className="pt-2">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Corrupti,
-              repudiandae in. Natus, delectus dolorum quod cupiditate excepturi
-              non incidunt, nulla impedit sed sint quis quo accusantium
-              asperiores debitis. Magnam, eveniet. Magni, quia! quasi eveniet
-              deserunt unde obcaecati. Dignissimos, perferendis!
-            </p>
+            </Link>
+            <p className="pt-2">{data.shop.description}</p>
           </div>
           <div className="w-full 800px:w-[50%] mt-5 800px:mt-0 800px:flex flex-col items-end">
             <div className="text-left">
               <h5 className="font-[600]">
-                Joined on: <span className="font-[500]">14 March, 2023</span>
+                Joined on:{" "}
+                <span className="font-[500]">
+                  {data.shop?.createdAt?.slice(0, 10)}
+                </span>
               </h5>
-              <h5 className="font-[600]">
-                Total Products: <span className="font-[500]">1,211</span>
+              <h5 className="font-[600] pt-3">
+                Total Products:{" "}
+                <span className="font-[500]">
+                  {products && products.length}
+                </span>
               </h5>
-              <h5 className="font-[600]">
-                Total Reviews: <span className="font-[500]">212</span>
+              <h5 className="font-[600] pt-3">
+                Total Reviews:{" "}
+                <span className="font-[500]">10</span>
               </h5>
               <Link to="/">
-                <div className={`${styles.button} rounded-[4px] !h-[39.5px] mt-3`}>
+                <div
+                  className={`${styles.button} !rounded-[4px] !h-[39.5px] mt-3`}
+                >
                   <h4 className="text-white">Visit Shop</h4>
                 </div>
               </Link>
@@ -284,4 +387,4 @@ const ProductDetailsInfo = ({ data }) => {
   );
 };
 
-export default ProductsDetail;
+export default ProductDetails;

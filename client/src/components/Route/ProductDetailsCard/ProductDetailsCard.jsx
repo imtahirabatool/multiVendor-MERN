@@ -10,8 +10,8 @@ import {
 
 const ProductDetailsCard = ({ setOpen, data }) => {
   const [count, setCount] = useState(1);
-//   const [click, setClick] = useState(false);
-//   const [select, setSelect] = useState(false);
+  //   const [click, setClick] = useState(false);
+  //   const [select, setSelect] = useState(false);
   const [isWishlist, setIsWishlist] = useState(false);
 
   const handleToggleWishlist = () => {
@@ -25,9 +25,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
       setCount(count - 1);
     }
   };
-  const increamentCount = () => {
+
+  const incrementCount = () => {
     setCount(count + 1);
   };
+
   return (
     <div className="bg-[#fff]">
       {data ? (
@@ -40,18 +42,28 @@ const ProductDetailsCard = ({ setOpen, data }) => {
             />
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
-                <img src={data.imageUrl[0].url} alt="" />
+                {data.imageUrl && data.imageUrl[0] && (
+                  <img src={data.imageUrl[0].url} alt="" />
+                )}
                 <div className="flex">
-                  <img
-                    src={data.shop.shopAvatar.url}
-                    alt=""
-                    className="w-[50px] h-[50px] rounded-full mr-2"
-                  />
+                  {data.shop && data.shop.shopAvatar && (
+                    <img
+                      src={data.shop.shopAvatar.url}
+                      alt=""
+                      className="w-[50px] h-[50px] rounded-full mr-2"
+                    />
+                  )}
                   <div className="">
-                    <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-                    <h5 className="pb-3 text-[15px]">
-                      ({data.shop.ratings} Rating)
-                    </h5>
+                    {data.shop && (
+                      <>
+                        <h3 className={`${styles.shop_name}`}>
+                          {data.shop.name}
+                        </h3>
+                        <h5 className="pb-3 text-[15px]">
+                          ({data.shop.ratings} Rating)
+                        </h5>
+                      </>
+                    )}
                   </div>
                 </div>
                 <div
@@ -92,7 +104,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                     </span>
                     <button
                       className="bg-gradient-to-r from-teal-400 to-teal-500 text-white font-bold rounded-l px-4 py-2 shadow-lg hover:opacity-75 transition duration-300 ease-in-out"
-                      onClick={increamentCount}
+                      onClick={incrementCount}
                     >
                       +
                     </button>

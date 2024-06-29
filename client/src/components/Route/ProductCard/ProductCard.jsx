@@ -19,18 +19,20 @@ const ProductCard = ({ data }) => {
     setIsWishlist(!isWishlist);
   };
 
-  const d = data.name;
+  const d = data.name || "";
   const product_name = d.replace(/\s+/g, "-");
 
   return (
     <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
       <div className="flex justify-end"></div>
       <Link to={`/product/${product_name}`}>
-        <img
-          src={data.imageUrl[0].url}
-          className="w-full h-[170px] object-contain"
-          alt=""
-        />
+        {data.imageUrl && data.imageUrl[0] && (
+          <img
+            src={data.imageUrl[0].url}
+            className="w-full h-[170px] object-contain"
+            alt={data.name}
+          />
+        )}
       </Link>
 
       <Link to="/">
