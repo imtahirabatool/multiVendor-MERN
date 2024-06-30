@@ -1,6 +1,5 @@
-import { React, useState } from "react";
+import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
-
 import { Link } from "react-router-dom";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
@@ -8,14 +7,16 @@ import { server } from "../../server";
 import { toast } from "react-toastify";
 import styles from "../../styles/style";
 
-const Singup = () => {
+const Signup = () => {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [visible, setVisible] = useState(false);
   const [avatar, setAvatar] = useState(null);
 
+  // Function to handle file input change
   const handleFileInputChange = (e) => {
+    const file = e.target.files[0];
     const reader = new FileReader();
 
     reader.onload = () => {
@@ -24,24 +25,42 @@ const Singup = () => {
       }
     };
 
-    reader.readAsDataURL(e.target.files[0]);
+    if (file) {
+      reader.readAsDataURL(file);
+    }
   };
 
+  // Function to handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    axios
-      .post(`${server}/user/create-user`, { name, email, password, avatar })
-      .then((res) => {
-        toast.success(res.data.message);
-        setName("");
-        setEmail("");
-        setPassword("");
-        setAvatar();
-      })
-      .catch((error) => {
-        toast.error(error.response.data.message);
-      });
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("password", password);
+      if (avatar) {
+        formData.append("avatar", avatar);
+      }
+
+      const response = await axios.post(
+        `${server}/user/create-user`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      toast.success(response.data.message);
+      setName("");
+      setEmail("");
+      setPassword("");
+      setAvatar(null); // Reset avatar state after successful submission
+    } catch (error) {
+      toast.error(error.response.data.message);
+    }
   };
 
   return (
@@ -54,9 +73,10 @@ const Singup = () => {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <form className="space-y-6" onSubmit={handleSubmit}>
+            {/* Name input */}
             <div>
               <label
-                htmlFor="email"
+                htmlFor="name"
                 className="block text-sm font-medium text-gray-700"
               >
                 Full Name
@@ -64,7 +84,7 @@ const Singup = () => {
               <div className="mt-1">
                 <input
                   type="text"
-                  name="text"
+                  name="name"
                   autoComplete="name"
                   required
                   value={name}
@@ -74,6 +94,7 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Email input */}
             <div>
               <label
                 htmlFor="email"
@@ -94,6 +115,7 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Password input with visibility toggle */}
             <div>
               <label
                 htmlFor="password"
@@ -111,6 +133,7 @@ const Singup = () => {
                   onChange={(e) => setPassword(e.target.value)}
                   className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                 />
+                {/* Password visibility toggle */}
                 {visible ? (
                   <AiOutlineEye
                     className="absolute right-2 top-2 cursor-pointer"
@@ -127,12 +150,16 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Avatar file input */}
             <div>
               <label
                 htmlFor="avatar"
                 className="block text-sm font-medium text-gray-700"
-              ></label>
+              >
+                Avatar
+              </label>
               <div className="mt-2 flex items-center">
+                {/* Avatar preview */}
                 <span className="inline-block h-8 w-8 rounded-full overflow-hidden">
                   {avatar ? (
                     <img
@@ -144,9 +171,10 @@ const Singup = () => {
                     <RxAvatar className="h-8 w-8" />
                   )}
                 </span>
+                {/* File input for avatar */}
                 <label
                   htmlFor="file-input"
-                  className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
+                  className="ml-5 flex items-center justify-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 cursor-pointer"
                 >
                   <span>Upload a file</span>
                   <input
@@ -161,6 +189,7 @@ const Singup = () => {
               </div>
             </div>
 
+            {/* Submit button */}
             <div>
               <button
                 type="submit"
@@ -169,9 +198,13 @@ const Singup = () => {
                 Submit
               </button>
             </div>
-            <div className={`${styles.noramlFlex} w-full`}>
-              <h4>Already have an account?</h4>
-              <Link to="/login" className="text-blue-600 pl-2">
+
+            {/* Sign in link */}
+            <div
+              className={`${styles.normalFlex} w-full flex items-center justify-center`}
+            >
+              <h4 className="inline-block">Already have an account?</h4>
+              <Link to="/login" className="text-blue-600 pl-2 inline-block">
                 Sign In
               </Link>
             </div>
@@ -182,4 +215,4 @@ const Singup = () => {
   );
 };
 
-export default Singup;
+export default Signup;
