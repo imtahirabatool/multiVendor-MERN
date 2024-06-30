@@ -14,7 +14,6 @@ import styles from "../../styles/style";
 
 const ProfileContent = ({ active }) => {
   const { user } = useSelector((state) => state.user);
-  console.log("🚀 ~ ProfileContent ~ user:", user);
   const [name, setName] = useState(user && user.name);
   const [email, setEmail] = useState(user && user.email);
   const [phoneNumber, setPhoneNumber] = useState(user?.phoneNumber || "");
