@@ -27,29 +27,34 @@ export const productReducer = createReducer(initialState, (builder) => {
 
     // get all shop products
     .addCase("getAllproductsShopRequest", (state) => {
-      // console.log("Reducer: Handling getAllProductsShopRequest");
       state.isLoading = true;
       state.error = null;
     })
     .addCase("getAllProductsShopSuccess", (state, action) => {
-      // console.log(
-      //   "Reducer: Handling getAllProductsShopSuccess, payload:",
-      //   action.payload
-      // );
       state.isLoading = false;
-      state.allProducts = action.payload;
+      state.products = action.payload;
     })
     .addCase("getAllProductsShopFailed", (state, action) => {
-      // console.log(
-      //   "Reducer: Handling getAllProductsShopFailed, error:",
-      //   action.payload
-      // );
       state.isLoading = false;
       state.error = action.payload;
     })
     .addCase("clearError", (state) => {
       state.error = null;
     })
+
+    // get all products
+    .addCase("getAllProductsRequest", (state) => {
+      state.isLoading = true;
+    })
+    .addCase("getAllProductsSuccess", (state, action) => {
+      state.isLoading = false;
+      state.allProducts = action.payload;
+    })
+    .addCase("getAllProductsFailed", (state, action) => {
+      state.isLoading = false;
+      state.error = action.payload;
+    })
+
     // delete product of shop
     .addCase("deleteProductRequest", (state) => {
       state.isLoading = true;

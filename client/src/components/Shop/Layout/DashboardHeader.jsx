@@ -9,11 +9,12 @@ import { backendUrl } from "../../../server";
 
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
+// console.log(seller);
 
   return (
     <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
       <div>
-        <Link to="/dashboard">
+        <Link to="/">
           <img
             src="https://shopo.quomodothemes.website/assets/images/logo.svg"
             alt=""
@@ -56,7 +57,7 @@ const DashboardHeader = () => {
           {seller && (
             <Link to={`/shop/${seller._id}`}>
               <img
-                src={`${backendUrl}${seller.avatar}`}
+                src={`${backendUrl}${seller?.avatar}`}
                 alt="avatar"
                 className="w-[50px] h-[50px] rounded-full object-cover"
               />

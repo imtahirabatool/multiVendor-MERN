@@ -37,18 +37,16 @@ import {
   ShopAllCoupons,
   ShopPreviewPage,
 } from "./routes/ShopRoutes.js";
-import { getAllProductsShop } from "./redux/actions/product.js";
+import { getAllProducts } from "./redux/actions/product.js";
 import { getAllEvents } from "./redux/actions/event.js";
 
 export default function App() {
   useEffect(() => {
     Store.dispatch(loadUser());
     Store.dispatch(loadSeller());
-    Store.dispatch(getAllProductsShop);
-    Store.dispatch(getAllEvents);
+    Store.dispatch(getAllProducts());
+    Store.dispatch(getAllEvents());
   }, []);
-
-  // console.log("isSeller:", isSeller);
 
   return (
     <>
@@ -66,7 +64,7 @@ export default function App() {
             element={<SellerActivationPage />}
           />
           <Route path="/products" element={<ProductsPage />} />
-          <Route path="/product/:name" element={<ProductDetailsPage />} />
+          <Route path="/product/:id" element={<ProductDetailsPage />} />
           <Route path="/best-selling" element={<BestSellingPage />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/faq" element={<FAQPage />} />

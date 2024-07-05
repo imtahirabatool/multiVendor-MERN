@@ -15,24 +15,11 @@ const AllProducts = () => {
 
   useEffect(() => {
     if (seller && seller._id) {
-      console.log("Dispatching getAllProductsShop with seller ID:", seller._id);
-      dispatch(getAllProductsShop(seller._id));
+      const products=getAllProductsShop(seller._id);
+      dispatch(products);
     }
+      // console.log("🚀 ~ useEffect ~ products:", products && products.length)
   }, [dispatch, seller]);
-
-  useEffect(() => {
-    console.log("Products updated:", products);
-  }, [products]);
-
-  useEffect(() => {
-    console.log("isLoading updated:", isLoading);
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error:", error);
-    }
-  }, [error]);
 
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
@@ -80,11 +67,11 @@ const AllProducts = () => {
       flex: 0.8,
       sortable: false,
       renderCell: (params) => {
-        const d = params.row.name;
-        const product_name = d.replace(/\s+/g, "-");
+        // const d = params.row.name;
+        // const product_name = d.replace(/\s+/g, "-");
         return (
           <>
-            <Link to={`/product/${product_name}`}>
+            <Link to={`/product/${params.id}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>

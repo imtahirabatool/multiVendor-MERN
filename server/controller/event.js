@@ -44,7 +44,7 @@ router.get("/get-all-events", async (req, res, next) => {
     const events = await Event.find();
     res.status(201).json({
       success: true,
-      events,
+      allEvents: events,
     });
   } catch (error) {
     return next(new ErrorHandler(error, 400));
@@ -53,7 +53,7 @@ router.get("/get-all-events", async (req, res, next) => {
 
 // Get all events of a shop
 router.get(
-  "/get-all-events/:id",
+  "/get-all-shop-events/:id",
   catchAsyncError(async (req, res, next) => {
     try {
       const events = await Event.find({ shopId: req.params.id });

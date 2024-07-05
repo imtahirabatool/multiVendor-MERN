@@ -10,7 +10,10 @@ export const createEvent = (newForm) => async (dispatch) => {
     const data = await axios.post(
       `${server}/event/create-event`,
       newForm,
-      config
+      config,
+      {
+        withCredentials: true,
+      }
     );
     dispatch({ type: "eventCreateSuccess", payload: data.event });
   } catch (error) {
@@ -19,16 +22,17 @@ export const createEvent = (newForm) => async (dispatch) => {
       payload: error.response.data.message,
     });
   }
+      console.log("🚀 ~ createEvent ~ newForm:", newForm)
 };
 
 // Get all events of a shop
 export const getAllEventsShop = (id) => async (dispatch) => {
   try {
-    dispatch({ type: "getAllEventsShopRequest" });
+    dispatch({ type: "getAlleventsShopRequest" });
 
-    const response = await axios.get(`${server}/event/get-all-events/${id}`);
-
-    const { data } = response;
+    const { data } = await axios.get(
+      `${server}/event/get-all-shop-events/${id}`
+    );
 
     dispatch({ type: "getAllEventsShopSuccess", payload: data.events }); // Ensure the payload matches the response key
   } catch (error) {
@@ -37,7 +41,7 @@ export const getAllEventsShop = (id) => async (dispatch) => {
       error.response?.data?.message || error.message
     );
     dispatch({
-      type: "getAllEventsShopFailed",
+      type: "getAlleventsShopFailed",
       payload: error.response?.data?.message || error.message,
     });
   }

@@ -42,11 +42,28 @@ router.get(
   "/get-all-products-shop/:id",
   catchAsyncError(async (req, res, next) => {
     try {
-      const product = await Product.find({ shopId: req.params.id });
+      const products = await Product.find({ shopId: req.params.id });
 
       res.status(201).json({
         success: true,
-        product,
+        products,
+      });
+    } catch (error) {
+      return next(new ErrorHandler(error.message, 400));
+    }
+  })
+);
+
+//get all products
+router.get(
+  "/get-all-products",
+  catchAsyncError(async (req, res, next) => {
+    try {
+      const products = await Product.find().sort({ createdAt: -1 });
+
+      res.status(201).json({
+        success: true,
+        allProducts: products,
       });
     } catch (error) {
       return next(new ErrorHandler(error.message, 400));

@@ -8,7 +8,7 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { getAllProductsShop } from "../../redux/actions/product";
-import { server } from "../../server";
+import { backendUrl, server } from "../../server";
 import {
   addToWishlist,
   removeFromWishlist,
@@ -20,6 +20,7 @@ import axios from "axios";
 import styles from "../../styles/style";
 
 const ProductDetails = ({ data }) => {
+  console.log("🚀 ~ ProductDetails ~ data:", data)
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -120,7 +121,7 @@ const ProductDetails = ({ data }) => {
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
                 <img
-                  src={`${data && data.images[select]?.url}`}
+                  src={`${backendUrl}${data && data.images[select]}`}
                   alt=""
                   className="w-[80%]"
                 />
@@ -128,12 +129,13 @@ const ProductDetails = ({ data }) => {
                   {data &&
                     data.images.map((i, index) => (
                       <div
+                        key={index}
                         className={`${
-                          select === 0 ? "border" : "null"
+                          select === index ? "border" : ""
                         } cursor-pointer`}
                       >
                         <img
-                          src={`${i?.url}`}
+                          src={`${backendUrl}${i}`}
                           alt=""
                           className="h-[200px] overflow-hidden mr-3 mt-3"
                           onClick={() => setSelect(index)}
@@ -308,9 +310,9 @@ const ProductDetailsInfo = ({
 
       {active === 2 ? (
         <div className="w-full min-h-[40vh] flex flex-col items-center py-3 overflow-y-scroll">
-          {data &&
+          {data && data.reviews && data.reviews.length > 0 ? (
             data.reviews.map((item, index) => (
-              <div className="w-full flex my-2">
+              <div className="w-full flex my-2" key={index}>
                 <img
                   src={`${item.user.avatar?.url}`}
                   alt=""
@@ -324,11 +326,35 @@ const ProductDetailsInfo = ({
                   <p>{item.comment}</p>
                 </div>
               </div>
-            ))}
+            ))
+          ) : (
+            <p>No reviews available</p>
+          )}
 
           <div className="w-full flex justify-center">
-            {data && data.reviews.length === 0 && (
-              <h5>No Reviews have for this product!</h5>
+            {data && data.reviews ? (
+              data.reviews.length === 0 ? (
+                <h5>No Reviews have for this product!</h5>
+              ) : (
+                data.reviews.map((item, index) => (
+                  <div className="w-full flex my-2" key={index}>
+                    <img
+                      src={`${item.user.avatar?.url}`}
+                      alt=""
+                      className="w-[50px] h-[50px] rounded-full"
+                    />
+                    <div className="pl-2 ">
+                      <div className="w-full flex items-center">
+                        <h1 className="font-[500] mr-3">{item.user.name}</h1>
+                        <Ratings rating={data?.ratings} />
+                      </div>
+                      <p>{item.comment}</p>
+                    </div>
+                  </div>
+                ))
+              )
+            ) : (
+              <p>Loading reviews...</p>
             )}
           </div>
         </div>
@@ -346,9 +372,7 @@ const ProductDetailsInfo = ({
                 />
                 <div className="pl-3">
                   <h3 className={`${styles.shop_name}`}>{data.shop.name}</h3>
-                  <h5 className="pb-2 text-[15px]">
-                    (4/5) Ratings
-                  </h5>
+                  <h5 className="pb-2 text-[15px]">(4/5) Ratings</h5>
                 </div>
               </div>
             </Link>
@@ -369,8 +393,7 @@ const ProductDetailsInfo = ({
                 </span>
               </h5>
               <h5 className="font-[600] pt-3">
-                Total Reviews:{" "}
-                <span className="font-[500]">10</span>
+                Total Reviews: <span className="font-[500]">10</span>
               </h5>
               <Link to="/">
                 <div

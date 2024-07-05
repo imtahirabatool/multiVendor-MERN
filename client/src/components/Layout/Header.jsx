@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import {
   AiOutlineHeart,
@@ -19,6 +19,7 @@ import styles from "../../styles/style";
 import { backendUrl } from "../../server";
 
 const Header = ({ activeHeading }) => {
+  const {id }=useParams();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -32,7 +33,7 @@ const Header = ({ activeHeading }) => {
   const [openWishlist, setOpenWishlist] = useState(false);
   const [open, setOpen] = useState(false);
 
-  console.log(user);
+  // console.log(user);
   const handleSearchChange = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
@@ -281,11 +282,10 @@ const Header = ({ activeHeading }) => {
                 {searchData && (
                   <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
                     {searchData.map((i) => {
-                      const d = i.name;
-
-                      const Product_name = d.replace(/\s+/g, "-");
+                      // const d = i.name;
+                      // const Product_name = d.replace(/\s+/g, "-");
                       return (
-                        <Link to={`/product/${Product_name}`}>
+                        <Link to={`/product/${id }`}>
                           <div className="flex items-center">
                             <img
                               src={i.image_Url[0]?.url}

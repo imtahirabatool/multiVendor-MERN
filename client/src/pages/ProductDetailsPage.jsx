@@ -7,9 +7,9 @@ import ProductsDetail from "../components/Products/ProductsDetail";
 import { useSelector } from "react-redux";
 
 const ProductDetailsPage = () => {
+  const { id } = useParams();
   const { allProducts } = useSelector((state) => state.products);
   const { allEvents } = useSelector((state) => state.events);
-  const { id } = useParams();
   const [data, setData] = useState(null);
   const [searchParams] = useSearchParams();
   const eventData = searchParams.get("isEvent");
@@ -20,6 +20,8 @@ const ProductDetailsPage = () => {
       setData(event);
     } else {
       const product = allProducts && allProducts.find((i) => i._id === id);
+      // console.log("🚀 ~ useEffect ~ allProducts:", allProducts)
+      // console.log("🚀 ~ useEffect ~ product:", product)
       setData(product);
     }
   }, [allProducts, allEvents, eventData, id]);

@@ -12,17 +12,18 @@ export const eventReducer = createReducer(initialState, (builder) => {
     .addCase("eventCreateSuccess", (state, action) => {
       state.isLoading = false;
       state.event = action.payload;
-      state.success = true;
+      // state.success = false;
     })
     .addCase("eventCreateFail", (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
-      state.success = false;
+      // state.success = false;
     })
+    //all shop events
     .addCase("getAlleventsShopRequest", (state) => {
       state.isLoading = true;
     })
-    .addCase("getAlleventsShopSuccess", (state, action) => {
+    .addCase("getAllEventsShopSuccess", (state, action) => {
       state.isLoading = false;
       state.events = action.payload;
     })
@@ -30,6 +31,7 @@ export const eventReducer = createReducer(initialState, (builder) => {
       state.isLoading = false;
       state.error = action.payload;
     })
+    //delete events
     .addCase("deleteeventRequest", (state) => {
       state.isLoading = true;
     })
@@ -41,6 +43,7 @@ export const eventReducer = createReducer(initialState, (builder) => {
       state.isLoading = false;
       state.error = action.payload;
     })
+    //get all events
     .addCase("getAlleventsRequest", (state) => {
       state.isLoading = true;
     })

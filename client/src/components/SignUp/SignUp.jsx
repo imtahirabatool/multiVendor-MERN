@@ -1,12 +1,11 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { RxAvatar } from "react-icons/rx";
 import axios from "axios";
 import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import styles from "../../styles/style";
+import { Link } from "react-router-dom";
 import { server } from "../../server";
+import styles from "../../styles/style";
 
 const Signup = () => {
   const [email, setEmail] = useState("");
@@ -18,17 +17,7 @@ const Signup = () => {
   // Function to handle file input change
   const handleFileInputChange = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onload = () => {
-      if (reader.readyState === 2) {
-        setAvatar(reader.result);
-      }
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
-    }
+    setAvatar(file);
   };
 
   // Function to handle form submission
@@ -44,9 +33,13 @@ const Signup = () => {
     const config = { headers: { "Content-Type": "multipart/form-data" } };
 
     try {
-      const response = await axios.post(`${server}/user/create-user`, formData, config);
+      const response = await axios.post(
+        `${server}/user/create-user`,
+        formData,
+        config
+      );
       if (response && response.data) {
-        toast.success(response.data.message); // Using toast to display success message
+        toast.success(response.data.message);
         setName("");
         setEmail("");
         setPassword("");
@@ -55,8 +48,8 @@ const Signup = () => {
         toast.error("Unexpected response from server.");
       }
     } catch (error) {
-      const errorMessage = error.response?.data?.message || "Something went wrong!";
-      setError(errorMessage);
+      const errorMessage =
+        error.response?.data?.message || "Something went wrong!";
       toast.error(errorMessage);
     }
   };

@@ -9,30 +9,16 @@ import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
 
 const AllEvents = () => {
   const { events, isLoading, error } = useSelector((state) => state.events);
+  console.log("🚀 ~ AllEvents ~ events:", events)
   const { seller } = useSelector((state) => state.seller);
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (seller && seller._id) {
-      //   console.log("Dispatching getAllEventsShop with seller ID:", seller._id);
       dispatch(getAllEventsShop(seller._id));
     }
   }, [dispatch, seller]);
-
-  useEffect(() => {
-    // console.log("Events updated:", events);
-  }, [events]);
-
-  useEffect(() => {
-    // console.log("isLoading updated:", isLoading);
-  }, [isLoading]);
-
-  useEffect(() => {
-    if (error) {
-      console.error("Error:", error);
-    }
-  }, [error]);
 
   const handleDelete = (id) => {
     dispatch(deleteEvent(id));
@@ -80,11 +66,11 @@ const AllEvents = () => {
       flex: 0.8,
       sortable: false,
       renderCell: (params) => {
-        const d = params.row.name;
-        const product_name = d.replace(/\s+/g, "-");
+        // const d = params.row.name;
+        // const product_name = d.replace(/\s+/g, "-");
         return (
           <>
-            <Link to={`/product/${product_name}`}>
+            <Link to={`/event/${params.id}`}>
               <Button>
                 <AiOutlineEye size={20} />
               </Button>

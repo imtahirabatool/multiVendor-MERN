@@ -7,8 +7,10 @@ import {
   AiOutlineMessage,
   AiOutlineShoppingCart,
 } from "react-icons/ai";
+import { backendUrl } from "../../../server";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
+  console.log("🚀 ~ ProductDetailsCard ~ data:", data);
   const [count, setCount] = useState(1);
   //   const [click, setClick] = useState(false);
   //   const [select, setSelect] = useState(false);
@@ -29,7 +31,6 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const incrementCount = () => {
     setCount(count + 1);
   };
-
   return (
     <div className="bg-[#fff]">
       {data ? (
@@ -42,13 +43,13 @@ const ProductDetailsCard = ({ setOpen, data }) => {
             />
             <div className="block w-full 800px:flex">
               <div className="w-full 800px:w-[50%]">
-                {data.imageUrl && data.imageUrl[0] && (
-                  <img src={data.imageUrl[0].url} alt="" />
+                {data.images && data.images[0] && (
+                  <img src={`${backendUrl}${data.images[0]}`} alt="" />
                 )}
                 <div className="flex">
-                  {data.shop && data.shop.shopAvatar && (
+                  {data.shop && data.shop.avatar && (
                     <img
-                      src={data.shop.shopAvatar.url}
+                      src={`${backendUrl}${data.shop.avatar}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />

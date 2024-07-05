@@ -27,7 +27,7 @@ const EventCard = ({ active, data }) => {
   };
 
   if (!data || !data.images) {
-    return <div>Loading...</div>; // or handle the case where data is missing
+    return <div>Loading...</div>; 
   }
 
   return (
