@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { RxCross1 } from "react-icons/rx";
 import styles from "../../../styles/style";
 import {
@@ -9,15 +9,33 @@ import {
 } from "react-icons/ai";
 import { backendUrl } from "../../../server";
 import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { toast } from "react-toastify";
+import { addTocart } from "../../../redux/actions/cart";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../../redux/actions/wishlist";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
-  console.log("🚀 ~ ProductDetailsCard ~ data:", data);
+  const dispatch = useDispatch();
+  const { cart } = useSelector((state) => state.cart);
+  const { wishlist } = useSelector((state) => state.wishlist);
   const [count, setCount] = useState(1);
-  //   const [click, setClick] = useState(false);
-  //   const [select, setSelect] = useState(false);
   const [isWishlist, setIsWishlist] = useState(false);
 
+  useEffect(() => {
+    setIsWishlist(wishlist.some((item) => item._id === data._id));
+  }, [wishlist, data._id]);
+
   const handleToggleWishlist = () => {
+    if (isWishlist) {
+      dispatch(removeFromWishlist(data));
+      toast.success("Removed from wishlist!");
+    } else {
+      dispatch(addToWishlist(data));
+      toast.success("Added to wishlist!");
+    }
     setIsWishlist(!isWishlist);
   };
 
@@ -32,6 +50,22 @@ const ProductDetailsCard = ({ setOpen, data }) => {
   const incrementCount = () => {
     setCount(count + 1);
   };
+
+  const addToCartHandler = (id) => {
+    const isItemExists = cart && cart.find((i) => i._id === id);
+    if (isItemExists) {
+      toast.error("Item is already in the cart!");
+    } else {
+      if (data.stock < count) {
+        toast.error("Product stock limited!");
+      } else {
+        const cartData = { ...data, qty: count };
+        dispatch(addTocart(cartData));
+        toast.success("Item added to cart successfully!");
+      }
+    }
+  };
+
   return (
     <div className="bg-[#fff]">
       {data ? (
@@ -45,7 +79,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
             <div className="block w-full 800px:flex">
               <div className="w-full mt-3 mr-10 800px:w-[50%]">
                 {data.images && data.images[0] && (
-                  <img src={`${backendUrl}${data.images[0]}`} alt="" />
+                  <img
+                    src={`${backendUrl}${data.images[0]}`}
+                    alt=""
+                    className="w-full h-auto object-cover"
+                  />
                 )}
                 <br />
                 <div className="flex">
@@ -93,7 +131,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                     {data.discountPrice} $
                   </h4>
                   <h3 className={`${styles.price}`}>
-                    {data.price ? data.price + "$" : null}
+                    {data.originalPrice ? data.originalPrice + "$" : null}
                   </h3>
                 </div>
                 <div className="flex items-center mt-12 justify-between pr-3">
@@ -136,6 +174,7 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                 </div>
                 <div
                   className={`${styles.button} mt-6 rounded-[4px] h-11 flex items-center`}
+                  onClick={() => addToCartHandler(data._id)}
                 >
                   <span className="text-[#fff] flex items-center">
                     Add to Cart <AiOutlineShoppingCart className="ml-1" />

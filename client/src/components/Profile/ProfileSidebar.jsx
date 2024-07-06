@@ -28,8 +28,10 @@ const ProfileSidebar = ({ setActive, active }) => {
         console.log(error.response.data.message);
       });
   };
+
   return (
     <div className="w-full bg-white shadow-sm rounded-[10px] p-4 pt-8">
+      {/* Profile */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(1)}
@@ -41,15 +43,20 @@ const ProfileSidebar = ({ setActive, active }) => {
         <span
           className={`pl-3 ${
             active === 1 ? "text-red-500" : ""
-          } 800px:block hidden `}
+          } 800px:block hidden`}
           style={{ color: active === 1 ? "red" : "inherit" }}
         >
           Profile
         </span>
       </div>
+
+      {/* Orders */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(2)}
+        onClick={() => {
+          setActive(2);
+          navigate("/orders");
+        }}
       >
         <HiOutlineShoppingBag
           size={20}
@@ -64,9 +71,14 @@ const ProfileSidebar = ({ setActive, active }) => {
           Orders
         </span>
       </div>
+
+      {/* Refunds */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(3)}
+        onClick={() => {
+          setActive(3);
+          navigate("/refunds");
+        }}
       >
         <HiOutlineReceiptRefund
           size={20}
@@ -81,9 +93,14 @@ const ProfileSidebar = ({ setActive, active }) => {
           Refunds
         </span>
       </div>
+
+      {/* Inbox */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(4) || navigate("/inbox")}
+        onClick={() => {
+          setActive(4);
+          navigate("/inbox");
+        }}
       >
         <AiOutlineMessage
           size={20}
@@ -98,9 +115,14 @@ const ProfileSidebar = ({ setActive, active }) => {
           Inbox
         </span>
       </div>
+
+      {/* Track Order */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
-        onClick={() => setActive(5)}
+        onClick={() => {
+          setActive(5);
+          navigate("/track-order");
+        }}
       >
         <MdOutlineTrackChanges
           size={20}
@@ -115,6 +137,8 @@ const ProfileSidebar = ({ setActive, active }) => {
           Track Order
         </span>
       </div>
+
+      {/* Payment Method */}
       <div
         className="flex items-center cursor-pointer w-full mb-8"
         onClick={() => setActive(6)}

@@ -23,7 +23,9 @@ export const wishlistReducer = createReducer(initialState, (builder) => {
       localStorage.setItem("wishlistItems", JSON.stringify(state.wishlist));
     })
     .addCase(removeFromWishlist, (state, action) => {
-      state.wishlist = state.wishlist.filter((i) => i._id !== action.payload);
+      state.wishlist = state.wishlist.filter(
+        (i) => i._id !== action.payload._id
+      );
       localStorage.setItem("wishlistItems", JSON.stringify(state.wishlist));
     });
 });

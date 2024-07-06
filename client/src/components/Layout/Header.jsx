@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { categoriesData } from "../../static/data";
 import {
   AiOutlineHeart,
@@ -19,7 +19,6 @@ import styles from "../../styles/style";
 import { backendUrl } from "../../server";
 
 const Header = ({ activeHeading }) => {
-  const {id }=useParams();
   const { isAuthenticated, user } = useSelector((state) => state.user);
   const { isSeller } = useSelector((state) => state.seller);
   const { wishlist } = useSelector((state) => state.wishlist);
@@ -44,6 +43,11 @@ const Header = ({ activeHeading }) => {
         product.name.toLowerCase().includes(term.toLowerCase())
       );
     setSearchData(filteredProducts);
+  };
+
+  const handleSuggestionClick = () => {
+    setSearchTerm("");
+    setSearchData([]);
   };
 
   window.addEventListener("scroll", () => {
@@ -85,7 +89,7 @@ const Header = ({ activeHeading }) => {
                   searchData.map((i, index) => {
                     return (
                       <Link to={`/product/${i._id}`}>
-                        <div className="w-full flex items-start-py-3">
+                        <div className="flex items-center py-2 hover:bg-gray-200 cursor-pointer">
                           <img
                             src={`${backendUrl}${i.images[0]}`}
                             alt=""
@@ -271,7 +275,7 @@ const Header = ({ activeHeading }) => {
                 />
               </div>
 
-              <div className="my-8 w-[92%] m-auto h-[40px relative]">
+              <div className="my-8 w-[92%] m-auto relative">
                 <input
                   type="search"
                   placeholder="Search Product..."
@@ -279,24 +283,24 @@ const Header = ({ activeHeading }) => {
                   value={searchTerm}
                   onChange={handleSearchChange}
                 />
-                {searchData && (
-                  <div className="absolute bg-[#fff] z-10 shadow w-full left-0 p-3">
-                    {searchData.map((i) => {
-                      // const d = i.name;
-                      // const Product_name = d.replace(/\s+/g, "-");
-                      return (
-                        <Link to={`/product/${id }`}>
-                          <div className="flex items-center">
-                            <img
-                              src={i.image_Url[0]?.url}
-                              alt=""
-                              className="w-[50px] mr-2"
-                            />
-                            <h5>{i.name}</h5>
-                          </div>
-                        </Link>
-                      );
-                    })}
+                {searchData && searchData.length > 0 && (
+                  <div className="absolute bg-white z-10 shadow w-full left-0 p-3 mt-1 rounded-md">
+                    {searchData.map((i) => (
+                      <Link
+                        to={`/product/${i._id}`}
+                        key={i._id}
+                        onClick={handleSuggestionClick}
+                      >
+                        <div className="flex items-center py-2 hover:bg-gray-200 cursor-pointer">
+                          <img
+                            src={`${backendUrl}${i.images[0]}`}
+                            alt={i.name}
+                            className="w-[40px] h-[40px] mr-3 rounded-md object-cover"
+                          />
+                          <h1 className="text-sm">{i.name}</h1>
+                        </div>
+                      </Link>
+                    ))}
                   </div>
                 )}
               </div>
@@ -318,7 +322,7 @@ const Header = ({ activeHeading }) => {
                   <div>
                     <Link to="/profile">
                       <img
-                        src={`${user.avatar?.url}`}
+                        src={`${backendUrl}${user.avatar}`}
                         alt=""
                         className="w-[60px] h-[60px] rounded-full border-[3px] border-[#0eae88]"
                       />

@@ -20,7 +20,7 @@ import axios from "axios";
 import styles from "../../styles/style";
 
 const ProductDetails = ({ data }) => {
-  console.log("🚀 ~ ProductDetails ~ data:", data);
+  // console.log("🚀 ~ ProductDetails ~ data:", data);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -63,9 +63,9 @@ const ProductDetails = ({ data }) => {
   const addToCartHandler = (id) => {
     const isItemExists = cart && cart.find((i) => i._id === id);
     if (isItemExists) {
-      toast.error("Item already in cart!");
+      toast.error("Item is already in the cart!");
     } else {
-      if (data.stock < 1) {
+      if (data.stock < count) {
         toast.error("Product stock limited!");
       } else {
         const cartData = { ...data, qty: count };

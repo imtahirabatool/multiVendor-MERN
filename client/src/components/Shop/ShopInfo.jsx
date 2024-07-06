@@ -10,7 +10,7 @@ import { toast } from "react-toastify";
 
 const ShopInfo = ({ isOwner }) => {
   const { seller } = useSelector((state) => state.seller);
-  console.log("🚀 ~ ShopInfo ~ seller:", seller)
+  // console.log("🚀 ~ ShopInfo ~ seller:", seller)
   const [data, setData] = useState({});
   const { products } = useSelector((state) => state.products);
   const [isLoading, setIsLoading] = useState(false);

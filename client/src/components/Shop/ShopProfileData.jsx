@@ -9,7 +9,7 @@ import styles from "../../styles/style";
 
 const ShopProfileData = ({ isOwner }) => {
   const { products } = useSelector((state) => state.products);
-  console.log("🚀 ~ ShopProfileData ~ products:", products)
+  // console.log("🚀 ~ ShopProfileData ~ products:", products)
   const { events } = useSelector((state) => state.events);
   const { id } = useParams();
   const dispatch = useDispatch();
