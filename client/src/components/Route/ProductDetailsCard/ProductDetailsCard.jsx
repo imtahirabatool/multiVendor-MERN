@@ -8,6 +8,7 @@ import {
   AiOutlineShoppingCart,
 } from "react-icons/ai";
 import { backendUrl } from "../../../server";
+import { Link } from "react-router-dom";
 
 const ProductDetailsCard = ({ setOpen, data }) => {
   console.log("🚀 ~ ProductDetailsCard ~ data:", data);
@@ -42,10 +43,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
               onClick={() => setOpen(false)}
             />
             <div className="block w-full 800px:flex">
-              <div className="w-full 800px:w-[50%]">
+              <div className="w-full mt-3 mr-10 800px:w-[50%]">
                 {data.images && data.images[0] && (
                   <img src={`${backendUrl}${data.images[0]}`} alt="" />
                 )}
+                <br />
                 <div className="flex">
                   {data.shop && data.shop.avatar && (
                     <img
@@ -57,9 +59,11 @@ const ProductDetailsCard = ({ setOpen, data }) => {
                   <div className="">
                     {data.shop && (
                       <>
-                        <h3 className={`${styles.shop_name}`}>
-                          {data.shop.name}
-                        </h3>
+                        <Link to={`/shop/preview/${data?.shop._id}`}>
+                          <h3 className={`${styles.shop_name}`}>
+                            {data.shop.name}
+                          </h3>
+                        </Link>
                         <h5 className="pb-3 text-[15px]">
                           ({data.shop.ratings} Rating)
                         </h5>

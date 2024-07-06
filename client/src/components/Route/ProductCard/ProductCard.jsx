@@ -27,7 +27,7 @@ const ProductCard = ({ data }) => {
 // console.log(data.images);
   return (
     <div className="w-full h-[370px] bg-white rounded-lg shadow-sm p-3 relative cursor-pointer">
-      <div className="flex justify-end"></div>
+      <div className="flex object-fit:cover justify-end"></div>
       <Link to={`/product/${id}`}>
         <img
           src={`${backendUrl}${data.images && data?.images[0]}`}
@@ -35,8 +35,7 @@ const ProductCard = ({ data }) => {
           className=" w-full h-[170px] object-contain"
         />
       </Link>
-
-      <Link to="/">
+      <Link to={`/shop/preview/${data?.shop._id}`}>
         <h5 className={`${styles.shop_name}`}>{data.shop.name}</h5>
       </Link>
 

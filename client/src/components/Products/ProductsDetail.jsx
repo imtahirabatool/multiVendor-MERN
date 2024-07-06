@@ -20,7 +20,7 @@ import axios from "axios";
 import styles from "../../styles/style";
 
 const ProductDetails = ({ data }) => {
-  console.log("🚀 ~ ProductDetails ~ data:", data)
+  console.log("🚀 ~ ProductDetails ~ data:", data);
   const { wishlist } = useSelector((state) => state.wishlist);
   const { cart } = useSelector((state) => state.cart);
   const { user, isAuthenticated } = useSelector((state) => state.user);
@@ -119,7 +119,7 @@ const ProductDetails = ({ data }) => {
         <div className={`${styles.section} w-[90%] 800px:w-[80%]`}>
           <div className="w-full py-5">
             <div className="block w-full 800px:flex">
-              <div className="w-full 800px:w-[50%]">
+              <div className="object-fit: cover w-full 800px:w-[50%]">
                 <img
                   src={`${backendUrl}${data && data.images[select]}`}
                   alt=""
@@ -210,7 +210,7 @@ const ProductDetails = ({ data }) => {
                 <div className="flex items-center pt-8">
                   <Link to={`/shop/preview/${data?.shop._id}`}>
                     <img
-                      src={`${data?.shop?.avatar?.url}`}
+                      src={`${backendUrl}${data?.shop?.avatar}`}
                       alt=""
                       className="w-[50px] h-[50px] rounded-full mr-2"
                     />
@@ -366,7 +366,7 @@ const ProductDetailsInfo = ({
             <Link to={`/shop/preview/${data.shop._id}`}>
               <div className="flex items-center">
                 <img
-                  src={`${data?.shop?.avatar?.url}`}
+                  src={`${backendUrl}${data?.shop?.avatar}`}
                   className="w-[50px] h-[50px] rounded-full"
                   alt=""
                 />
