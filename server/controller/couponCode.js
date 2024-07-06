@@ -7,7 +7,7 @@ const { isSeller } = require("../middleware/auth");
 
 //Create coupon code
 router.post(
-  "/creat-coupon-code",
+  "/create-coupon-code",
   isSeller,
   catchAsyncError(async (req, res, next) => {
     try {

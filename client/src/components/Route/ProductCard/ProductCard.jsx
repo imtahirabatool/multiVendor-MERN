@@ -14,7 +14,7 @@ import { backendUrl } from "../../../server";
 
 const ProductCard = ({ data }) => {
   const id = data._id;
-  console.log("🚀 ~ ProductCard ~ data:", data)
+  // console.log("🚀 ~ ProductCard ~ data:", data)
   const [isWishlist, setIsWishlist] = useState(false);
   const [open, setOpen] = useState(false);
 
