@@ -30,7 +30,7 @@ const userSchema = new mongoose.Schema({
       city: { type: String },
       address1: { type: String },
       address2: { type: String },
-      zipCode: { type: String }, // Adjust type as per your requirements (String or Number)
+      zipCode: { type: String },
       addressType: { type: String },
     },
   ],

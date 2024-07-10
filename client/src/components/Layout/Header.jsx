@@ -307,17 +307,17 @@ const Header = ({ activeHeading }) => {
 
               <Navbar active={activeHeading} />
               <div className={`${styles.button} ml-4 !rounded-[4px]`}>
-                <Link to="/shop-create">
+                <Link to={`${isSeller ? "/dashboard" : "/shop-create"}`}>
                   <h1 className="text-[#fff] flex items-center">
-                    Become Seller <IoIosArrowForward className="ml-1" />
+                    {isSeller ? "Go Dashboard" : "Become Seller"}{" "}
+                    <IoIosArrowForward className="ml-1" />
                   </h1>
                 </Link>
               </div>
               <br />
               <br />
-              <br />
 
-              <div className="flex w-full justify-center">
+              <div className="flex w-full mb-12 justify-center">
                 {isAuthenticated ? (
                   <div>
                     <Link to="/profile">

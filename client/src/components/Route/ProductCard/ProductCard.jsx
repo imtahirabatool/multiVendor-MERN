@@ -8,7 +8,10 @@ import {
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ProductDetailsCard from "../ProductDetailsCard/ProductDetailsCard";
-import { addToWishlist, removeFromWishlist } from "../../../redux/actions/wishlist";
+import {
+  addToWishlist,
+  removeFromWishlist,
+} from "../../../redux/actions/wishlist";
 import { addTocart } from "../../../redux/actions/cart";
 import { toast } from "react-toastify";
 import Ratings from "../../Products/Ratings";
@@ -67,7 +70,11 @@ const ProductCard = ({ data, isEvent }) => {
           }`}
         >
           <img
-            src={`${backendUrl}${data.images[0]}`}
+            src={
+              data && data.images && data.images.length > 0
+                ? `${backendUrl}${data.images[0]}`
+                : "defaultImage.jpg"
+            }
             alt=""
             className="w-full h-[170px] object-cover rounded-t-lg"
           />

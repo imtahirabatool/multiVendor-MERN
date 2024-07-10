@@ -29,4 +29,4 @@ const couponCodeSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("CoupounCode", couponCodeSchema);
+module.exports = mongoose.model("CouponCode", couponCodeSchema);
