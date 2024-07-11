@@ -22,7 +22,6 @@ export const createEvent = (newForm) => async (dispatch) => {
       payload: error.response.data.message,
     });
   }
-      console.log("🚀 ~ createEvent ~ newForm:", newForm)
 };
 
 // Get all events of a shop
