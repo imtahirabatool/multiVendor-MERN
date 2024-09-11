@@ -2,6 +2,11 @@ import { createReducer } from "@reduxjs/toolkit";
 
 const initialState = {
   isLoading: true,
+  event: null,
+  events: [],
+  allEvents: [],
+  message: null,
+  error: null,
 };
 
 export const eventReducer = createReducer(initialState, (builder) => {
@@ -11,47 +16,48 @@ export const eventReducer = createReducer(initialState, (builder) => {
     })
     .addCase("eventCreateSuccess", (state, action) => {
       state.isLoading = false;
-      state.event = action.payload;
-      // state.success = false;
+      state.events = action.payload;
     })
     .addCase("eventCreateFail", (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
-      // state.success = false;
     })
-    //all shop events
-    .addCase("getAlleventsShopRequest", (state) => {
+
+    // all shop events
+    .addCase("getAllEventsShopRequest", (state) => {
       state.isLoading = true;
     })
     .addCase("getAllEventsShopSuccess", (state, action) => {
       state.isLoading = false;
       state.events = action.payload;
     })
-    .addCase("getAlleventsShopFailed", (state, action) => {
+    .addCase("getAllEventsShopFail", (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     })
-    //delete events
-    .addCase("deleteeventRequest", (state) => {
+
+    // delete events
+    .addCase("deleteEventRequest", (state) => {
       state.isLoading = true;
     })
-    .addCase("deleteeventSuccess", (state, action) => {
+    .addCase("deleteEventSuccess", (state, action) => {
       state.isLoading = false;
       state.message = action.payload;
     })
-    .addCase("deleteeventFailed", (state, action) => {
+    .addCase("deleteEventFail", (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     })
-    //get all events
-    .addCase("getAlleventsRequest", (state) => {
+
+    // get all events
+    .addCase("getAllEventsRequest", (state) => {
       state.isLoading = true;
     })
-    .addCase("getAlleventsSuccess", (state, action) => {
+    .addCase("getAllEventsSuccess", (state, action) => {
       state.isLoading = false;
       state.allEvents = action.payload;
     })
-    .addCase("getAlleventsFailed", (state, action) => {
+    .addCase("getAllEventsFail", (state, action) => {
       state.isLoading = false;
       state.error = action.payload;
     })

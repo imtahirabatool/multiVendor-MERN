@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AiOutlineDelete } from "react-icons/ai";
 import { Button } from "@material-ui/core";
 import Loader from "../Layout/Loader";
-import { DataGrid } from "@material-ui/data-grid";
+import { DataGrid } from "@mui/x-data-grid";
 import styles from "../../styles/style";
 import { RxCross1 } from "react-icons/rx";
 import axios from "axios";
@@ -15,11 +15,11 @@ const AllCoupons = () => {
   const [open, setOpen] = useState(false);
   const [name, setName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [coupouns, setCoupouns] = useState([]);
-  const [minAmount, setMinAmout] = useState(null);
-  const [maxAmount, setMaxAmount] = useState(null);
-  const [selectedProducts, setSelectedProducts] = useState(null);
-  const [value, setValue] = useState(null);
+  const [coupons, setCoupons] = useState([]);
+  const [minAmount, setMinAmount] = useState("");
+  const [maxAmount, setMaxAmount] = useState("");
+  const [selectedProducts, setSelectedProducts] = useState("");
+  const [value, setValue] = useState("");
   const { seller } = useSelector((state) => state.seller);
   const { products } = useSelector((state) => state.products);
 
@@ -33,18 +33,22 @@ const AllCoupons = () => {
       })
       .then((res) => {
         setIsLoading(false);
-        setCoupouns(res.data.couponCodes);
+        setCoupons(res.data.couponCodes);
       })
       .catch((error) => {
         setIsLoading(false);
       });
-  }, [dispatch,seller]);
+  }, [dispatch, seller]);
 
   const handleDelete = async (id) => {
     axios
       .delete(`${server}/coupon/delete-coupon/${id}`, { withCredentials: true })
       .then((res) => {
-        toast.success("Coupon code deleted succesfully!");
+        toast.success("Coupon code deleted successfully!");
+        setCoupons(coupons.filter((coupon) => coupon._id !== id));
+      })
+      .catch((error) => {
+        toast.error("Failed to delete coupon code.");
       });
     window.location.reload();
   };
@@ -68,7 +72,7 @@ const AllCoupons = () => {
       .then((res) => {
         toast.success("Coupon code created successfully!");
         setOpen(false);
-        window.location.reload();
+        setCoupons([...coupons, res.data.couponCode]);
       })
       .catch((error) => {
         toast.error(error.response.data.message);
@@ -98,27 +102,19 @@ const AllCoupons = () => {
       sortable: false,
       renderCell: (params) => {
         return (
-          <>
-            <Button onClick={() => handleDelete(params.id)}>
-              <AiOutlineDelete size={20} />
-            </Button>
-          </>
+          <Button onClick={() => handleDelete(params.id)}>
+            <AiOutlineDelete size={20} />
+          </Button>
         );
       },
     },
   ];
 
-  const row = [];
-
-  coupouns &&
-    coupouns.forEach((item) => {
-      row.push({
-        id: item._id,
-        name: item.name,
-        price: item.value + " %",
-        sold: 10,
-      });
-    });
+  const rows = coupons.map((item) => ({
+    id: item._id,
+    name: item.name,
+    price: `${item.value} %`,
+  }));
 
   return (
     <>
@@ -135,16 +131,16 @@ const AllCoupons = () => {
             </div>
           </div>
           <DataGrid
-            rows={row}
+            rows={rows}
             columns={columns}
             pageSize={10}
             disableSelectionOnClick
             autoHeight
           />
           {open && (
-            <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] z-[20000] flex items-center justify-center">
-              <div className="w-[90%] 800px:w-[40%] h-[80vh] bg-white rounded-md shadow p-4">
-                <div className="w-full flex justify-end">
+            <div className="fixed top-0 left-0 w-full h-screen bg-[#00000062] flex items-center justify-center">
+              <div className="w-[90%] max-w-[600px] h-[80vh] bg-white rounded-md shadow p-4 overflow-auto">
+                <div className="flex justify-end">
                   <RxCross1
                     size={30}
                     className="cursor-pointer"
@@ -152,10 +148,9 @@ const AllCoupons = () => {
                   />
                 </div>
                 <h5 className="text-[30px] font-Poppins text-center">
-                  Create Coupon code
+                  Create Coupon Code
                 </h5>
-                {/* create coupoun code */}
-                <form onSubmit={handleSubmit} >
+                <form onSubmit={handleSubmit}>
                   <br />
                   <div>
                     <label className="pb-2">
@@ -174,7 +169,7 @@ const AllCoupons = () => {
                   <br />
                   <div>
                     <label className="pb-2">
-                      Discount Percentenge{" "}
+                      Discount Percentage{" "}
                       <span className="text-red-500">*</span>
                     </label>
                     <input
@@ -192,10 +187,10 @@ const AllCoupons = () => {
                     <label className="pb-2">Min Amount</label>
                     <input
                       type="number"
-                      name="value"
+                      name="minAmount"
                       value={minAmount}
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                      onChange={(e) => setMinAmout(e.target.value)}
+                      onChange={(e) => setMinAmount(e.target.value)}
                       placeholder="Enter your coupon code min amount..."
                     />
                   </div>
@@ -204,7 +199,7 @@ const AllCoupons = () => {
                     <label className="pb-2">Max Amount</label>
                     <input
                       type="number"
-                      name="value"
+                      name="maxAmount"
                       value={maxAmount}
                       className="mt-2 appearance-none block w-full px-3 h-[35px] border border-gray-300 rounded-[3px] placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                       onChange={(e) => setMaxAmount(e.target.value)}
@@ -219,9 +214,7 @@ const AllCoupons = () => {
                       value={selectedProducts}
                       onChange={(e) => setSelectedProducts(e.target.value)}
                     >
-                      <option value="Choose your selected products">
-                        Choose a selected product
-                      </option>
+                      <option value="">Choose a selected product</option>
                       {products &&
                         products.map((i) => (
                           <option value={i.name} key={i.name}>

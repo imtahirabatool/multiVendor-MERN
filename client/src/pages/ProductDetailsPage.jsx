@@ -20,11 +20,11 @@ const ProductDetailsPage = () => {
       setData(event);
     } else {
       const product = allProducts && allProducts.find((i) => i._id === id);
-      // console.log("🚀 ~ useEffect ~ allProducts:", allProducts)
-      // console.log("🚀 ~ useEffect ~ product:", product)
+
       setData(product);
     }
   }, [allProducts, allEvents, eventData, id]);
+  window.scrollTo(0, 0);
 
   return (
     <div>

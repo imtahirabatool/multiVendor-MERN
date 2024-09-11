@@ -8,6 +8,8 @@ import Events from "../components/Events/Events";
 import Sponsored from "../components/Route/Sponsored";
 import Footer from "../components/Layout/Footer";
 const HomePage = () => {
+  window.scrollTo(0, 0);
+
   return (
     <div>
       <Header activeHeading={1} />

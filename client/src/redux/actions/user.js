@@ -5,15 +5,12 @@ export const loadUser = () => async (dispatch) => {
   try {
     dispatch({ type: "LoadUserRequest" });
 
-    // Perform the API request to load user data
     const { data } = await axios.get(`${server}/user/load-user`, {
-      withCredentials: true, // Ensure cookies are sent with the request
+      withCredentials: true,
     });
 
-    // Dispatch success action with user data
     dispatch({ type: "LoadUserSuccess", payload: data.user });
   } catch (error) {
-    // Handle any errors from the API request
     dispatch({
       type: "LoadUserFail",
       payload: error.response?.data?.message || error.message,
@@ -22,7 +19,6 @@ export const loadUser = () => async (dispatch) => {
 };
 
 export const clearErrors = () => (dispatch) => {
-  // Dispatch action to clear errors
   dispatch({ type: "ClearErrors" });
 };
 
@@ -31,15 +27,12 @@ export const loadSeller = () => async (dispatch) => {
   try {
     dispatch({ type: "LoadSellerRequest" });
 
-    // Perform the API request to load seller data
     const { data } = await axios.get(`${server}/shop/getSeller`, {
-      withCredentials: true, // Ensure cookies are sent with the request
+      withCredentials: true,
     });
 
-    // Dispatch success action with seller data
     dispatch({ type: "LoadSellerSuccess", payload: data.seller });
   } catch (error) {
-    // Handle any errors from the API request
     dispatch({
       type: "LoadSellerFail",
       payload: error.response?.data?.message || error.message,
@@ -136,6 +129,29 @@ export const deleteUserAddress = (id) => async (dispatch) => {
   } catch (error) {
     dispatch({
       type: "deleteUserAddressFailed",
+      payload: error.response.data.message,
+    });
+  }
+};
+
+// get all users --- admin
+export const getAllUsers = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: "getAllUsersRequest",
+    });
+
+    const { data } = await axios.get(`${server}/user/admin-all-users`, {
+      withCredentials: true,
+    });
+
+    dispatch({
+      type: "getAllUsersSuccess",
+      payload: data.users,
+    });
+  } catch (error) {
+    dispatch({
+      type: "getAllUsersFailed",
       payload: error.response.data.message,
     });
   }

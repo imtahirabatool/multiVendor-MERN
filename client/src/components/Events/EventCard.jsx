@@ -26,20 +26,16 @@ const EventCard = ({ active, data }) => {
     }
   };
 
-  if (!data || !data.images) {
-    return <div>Loading...</div>; 
-  }
-
   return (
     <div
       className={`w-full block bg-white rounded-lg ${
         active ? "unset" : "mb-12"
       } lg:flex p-2`}
     >
-      <div className="w-full lg:w-[50%] m-auto">
+      <div className="w-full lg:w-[50%] m-auto p-5">
         <img src={`${backendUrl}${data.images[0]}`} alt="" />
       </div>
-      <div className="w-full lg:w-[50%] flex flex-col justify-center">
+      <div className="w-full lg:[w-50%] flex flex-col justify-center p-3">
         <h2 className={`${styles.productTitle}`}>{data.name}</h2>
         <p>{data.description}</p>
         <div className="flex py-2 justify-between">

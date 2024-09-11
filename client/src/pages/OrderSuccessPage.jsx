@@ -5,6 +5,8 @@ import Lottie from "react-lottie";
 import animationData from "../Assests/animations/107043-success.json";
 
 const OrderSuccessPage = () => {
+  window.scrollTo(0, 0);
+  
   return (
     <div>
       <Header />

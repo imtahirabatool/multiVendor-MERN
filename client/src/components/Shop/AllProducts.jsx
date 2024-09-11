@@ -15,10 +15,10 @@ const AllProducts = () => {
 
   useEffect(() => {
     if (seller && seller._id) {
-      const products=getAllProductsShop(seller._id);
+      const products = getAllProductsShop(seller._id);
       dispatch(products);
     }
-      // console.log("🚀 ~ useEffect ~ products:", products && products.length)
+    // console.log("🚀 ~ useEffect ~ products:", products && products.length)
   }, [dispatch, seller]);
 
   const handleDelete = (id) => {
@@ -30,40 +30,35 @@ const AllProducts = () => {
     {
       field: "id",
       headerName: "Product Id",
-      minWidth: 150,
       flex: 0.7,
     },
     {
       field: "name",
       headerName: "Name",
-      minWidth: 180,
       flex: 1.4,
     },
     {
       field: "price",
       headerName: "Price",
-      minWidth: 100,
       flex: 0.6,
     },
     {
       field: "Stock",
       headerName: "Stock",
       type: "number",
-      minWidth: 80,
       flex: 0.5,
     },
     {
       field: "sold",
       headerName: "Sold Out",
       type: "number",
-      minWidth: 130,
       flex: 0.6,
     },
     {
       field: "Preview",
       headerName: "",
       type: "number",
-      minWidth: 100,
+
       flex: 0.8,
       sortable: false,
       renderCell: (params) => {
@@ -83,7 +78,6 @@ const AllProducts = () => {
     {
       field: "Delete",
       flex: 0.8,
-      minWidth: 120,
       headerName: "",
       type: "number",
       sortable: false,

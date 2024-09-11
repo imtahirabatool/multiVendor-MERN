@@ -4,6 +4,8 @@ import Footer from "../components/Layout/Footer";
 import styles from "../styles/style";
 
 const FAQPage = () => {
+  window.scrollTo(0, 0);
+
   return (
     <div>
       <Header activeHeading={5} />

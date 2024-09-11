@@ -5,53 +5,79 @@ const jwt = require("jsonwebtoken");
 const shopSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Please enter shop name!"],
+    required: [true, "Please enter your shop name!"],
   },
   email: {
     type: String,
-    required: [true, "Please enter shop email!"],
-    unique: true,
+    required: [true, "Please enter your shop email address"],
   },
   password: {
     type: String,
     required: [true, "Please enter your password"],
-    minlength: [4, "Password should be greater than 4 characters"],
+    minLength: [6, "Password should be greater than 6 characters"],
     select: false,
   },
-  phoneNumber: {
-    type: Number,
-    required: true,
+  description: {
+    type: String,
   },
   address: {
     type: String,
     required: true,
   },
-  description: {
-    type: String,
+  phoneNumber: {
+    type: Number,
+    required: true,
   },
   role: {
     type: String,
-    default: "seller",
+    default: "Seller",
   },
   avatar: {
-    type: String,
-    required: true,
+    public_id: {
+      type: String,
+      required: true,
+    },
+    url: {
+      type: String,
+      required: true,
+    },
   },
   zipCode: {
     type: Number,
     required: true,
   },
+  withdrawMethod: {
+    type: Object,
+  },
+  availableBalance: {
+    type: Number,
+    default: 0,
+  },
+  transections: [
+    {
+      amount: {
+        type: Number,
+        required: true,
+      },
+      status: {
+        type: String,
+        default: "Processing",
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now(),
+      },
+      updatedAt: {
+        type: Date,
+      },
+    },
+  ],
   createdAt: {
     type: Date,
-    default: Date.now,
+    default: Date.now(),
   },
   resetPasswordToken: String,
   resetPasswordTime: Date,
-  status: {
-    type: String,
-    enum: ["inactive", "active"],
-    default: "inactive",
-  },
 });
 
 // Hash password
@@ -59,10 +85,7 @@ shopSchema.pre("save", async function (next) {
   if (!this.isModified("password")) {
     next();
   }
-
-  console.log("Hashing password for:", this.email);
   this.password = await bcrypt.hash(this.password, 10);
-  next();
 });
 
 // jwt token
@@ -72,7 +95,7 @@ shopSchema.methods.getJwtToken = function () {
   });
 };
 
-// compare password
+// comapre password
 shopSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };

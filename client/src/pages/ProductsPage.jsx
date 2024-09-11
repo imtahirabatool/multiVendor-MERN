@@ -22,7 +22,7 @@ const ProductsPage = () => {
         allProducts && allProducts.filter((i) => i.category === categoryData);
       setData(d);
     }
-    //    window.scrollTo(0,0);
+    window.scrollTo(0, 0);
   }, [allProducts, categoryData]);
 
   return (

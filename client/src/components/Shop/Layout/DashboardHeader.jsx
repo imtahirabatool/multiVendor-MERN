@@ -9,7 +9,7 @@ import { backendUrl } from "../../../server";
 
 const DashboardHeader = () => {
   const { seller } = useSelector((state) => state.seller);
-// console.log(seller);
+  // console.log(seller);
 
   return (
     <div className="w-full h-[80px] bg-white shadow sticky top-0 left-0 z-30 flex items-center justify-between px-4">
@@ -23,7 +23,7 @@ const DashboardHeader = () => {
       </div>
       <div className="flex items-center">
         <div className="flex items-center mr-4">
-          <Link className="800px:block hidden" to="/dashboard/cupouns">
+          <Link className="800px:block hidden" to="/dashboard-coupons">
             <AiOutlineGift
               color="#555"
               size={30}

@@ -56,8 +56,6 @@ const ShopInfo = ({ isOwner }) => {
     );
 
   const averageRating = totalRatings / totalReviewsLength || 0;
-  // console.log("🚀 ~ ShopInfo ~ seller:", seller.avatar)
-
   return (
     <>
       {isLoading ? (

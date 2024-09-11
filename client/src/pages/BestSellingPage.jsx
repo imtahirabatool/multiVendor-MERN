@@ -16,6 +16,7 @@ const BestSellingPage = () => {
     setData(sortedData);
   }, [allProducts]);
 
+  window.scrollTo(0, 0);
   return (
     <>
       {isLoading ? (

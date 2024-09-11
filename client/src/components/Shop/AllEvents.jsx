@@ -8,10 +8,9 @@ import { DataGrid } from "@material-ui/data-grid";
 import { deleteEvent, getAllEventsShop } from "../../redux/actions/event";
 
 const AllEvents = () => {
+  const dispatch = useDispatch();
   const { events, isLoading, error } = useSelector((state) => state.events);
   const { seller } = useSelector((state) => state.seller);
-
-  const dispatch = useDispatch();
 
   useEffect(() => {
     if (seller && seller._id) {
@@ -20,8 +19,9 @@ const AllEvents = () => {
   }, [dispatch, seller]);
 
   const handleDelete = (id) => {
-    dispatch(deleteEvent(id));
-    window.location.reload();
+    dispatch(deleteEvent(id)).then(() => {
+      dispatch(getAllEventsShop(seller._id));
+    });
   };
 
   const columns = [
@@ -64,19 +64,13 @@ const AllEvents = () => {
       minWidth: 100,
       flex: 0.8,
       sortable: false,
-      renderCell: (params) => {
-        // const d = params.row.name;
-        // const product_name = d.replace(/\s+/g, "-");
-        return (
-          <>
-            <Link to={`/event/${params.id}`}>
-              <Button>
-                <AiOutlineEye size={20} />
-              </Button>
-            </Link>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Link to={`/event/${params.id}`}>
+          <Button>
+            <AiOutlineEye size={20} />
+          </Button>
+        </Link>
+      ),
     },
     {
       field: "Delete",
@@ -85,29 +79,22 @@ const AllEvents = () => {
       headerName: "",
       type: "number",
       sortable: false,
-      renderCell: (params) => {
-        return (
-          <>
-            <Button onClick={() => handleDelete(params.id)}>
-              <AiOutlineDelete size={20} />
-            </Button>
-          </>
-        );
-      },
+      renderCell: (params) => (
+        <Button onClick={() => handleDelete(params.id)}>
+          <AiOutlineDelete size={20} />
+        </Button>
+      ),
     },
   ];
 
-  const row = [];
-  events &&
-    events.forEach((item) => {
-      row.push({
-        id: item._id,
-        name: item.name,
-        price: "USD " + item.discountPrice,
-        Stock: item.stock,
-        sold: 10,
-      });
-    });
+  const rows =
+    events?.map((item) => ({
+      id: item._id,
+      name: item.name,
+      price: `USD ${item.discountPrice}`,
+      Stock: item.stock,
+      sold: 10,
+    })) || [];
 
   return (
     <>
@@ -120,7 +107,7 @@ const AllEvents = () => {
       ) : (
         <div className="w-full mx-8 pt-1 mt-10 bg-white">
           <DataGrid
-            rows={row}
+            rows={rows}
             columns={columns}
             pageSize={10}
             disableSelectionOnClick
